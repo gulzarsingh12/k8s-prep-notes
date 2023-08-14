@@ -184,3 +184,30 @@ to view the api server options
 - can also see the manifest file at /etc/kubernetes/manifests/kube-apiserver.yaml
 - can also see in /etc/systemd/system/kube-apiserver.service when deployed as Service
 - also see with ps aux | grep apiserver
+
+# Kube-Controller-Manager
+It has many controllers like node controller, replication, deployment, job etc.
+
+for example, node controller will watch for the status of nodes after every 5 secs if any node go down then wait for timeout period of 40s (grace period) etc. and it will mark the node down if not able to reach within 5 mins pod eviction period. if node is removed from cluster then it will move the pods to another node if part of replication. 
+
+All this is done through kubeapiserver.
+
+Same way, replication controller will  create another pod if one dies to ensure it is running desied replicas.
+
+Same way as kubeapi-server, it can deployed as pod (kubeadm) or sepraretly. to check the options, see pod, ps aux or systemd service options.
+
+notable options are controllers. Set the controllers as below if want to customize.
+````
+--controllers=
+````
+
+# Kube-Schedular
+Note that only it is resposible for creating pod not deploying, which will be done by kubelet.
+
+it will assign the pod to nodes based on criteria like cpu, memory requirement, taints or tolerarions or node affinity etc.
+
+for example 2 nodes with cpu free 6 and 4. it will rank the node with 6 cpu as highest even if cpu for pod is required as 2 cpu.
+
+You can also customize it and create your own scheduler also.
+
+you can run it as service (as separate), pod (kubeadm). you can also see it through ps aux, pod, systemd service.
