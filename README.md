@@ -152,3 +152,35 @@ etcdctl endpoint health
 etcdctl get
 etcdctl put
 ````
+
+# Kube Apiserver
+When a command is executed on kubectl, it is recieved by apiserver and following steps are performed. for example a request to create a pod.
+1. it will authenticate the user
+2. it will validate the request.
+3. it will update the etcd cluster with pod creation request
+4. It will return to pod creation request.
+5. kube-schedular will listen to apiserver and see the request for pod creation. It will assess the various node parameters to schedule the pod. it will return back with pod scheduling information to api server.
+6. Api server will update etcd cluster and inform the kubelet to run the containers for pod
+7. kubeket will then pass the instrcution to CRE to create the containers. Once created, it will update back to api server
+8. api server will update the etcd.
+
+The above same pattern is followed for almost every request.
+
+apiserver will set the tls for etcd and kubelet ad below
+````
+--etcd-servers=https://127.0.0.1:2379
+--etcd-cafile=/var/lib/kubernetes/ca.pem
+--etcd-certfile=/var/lib/kubernetes/kubernetescert.pem
+--etcd-keyfile=/var/lib/kubernetes/kubernetes-key.pem
+--kubelet-certificate-authority=/var/lib/kubernetes/ca.pem
+--kubelet-client-certificate=/var/lib/kubernetes/kubernetescert.pem
+--kubelet-client-key=/var/lib/kubernetes/kubernetes-key.pem
+--kubelet-https=true
+````
+
+to view the api server options
+- if deployed as pod in kubeadm
+  k describe pod -n kube-system
+- can also see the manifest file at /etc/kubernetes/manifests/kube-apiserver.yaml
+- can also see in /etc/systemd/system/kube-apiserver.service when deployed as Service
+- also see with ps aux | grep apiserver
