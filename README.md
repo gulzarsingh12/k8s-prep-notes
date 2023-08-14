@@ -230,4 +230,23 @@ As per my understanding, this could be possible because service is a virtual thi
 
 kubeadm deploy it as dameonset (pod)
 
-or can be installed from githu.
+or can be installed from github
+
+# Kubectl apply
+- Whenenver 'k apply' command is used to deploy resources in k8s cluster, it will always save the applied yaml as json object annotation in the live object. Annotation name is 'kubectl.kubernetes.io/last-applied-configuration'
+- Suppose  after apply, you scale replicas to 2 using imperative command. it will not affect last applied configuration.
+- Now suppose you again modify the yaml with image name, remove some label and use apply to do this. It will update the image, remov label, ignore the replicas change and leave it to 2 as set by imperative command. it will update the last applied configuration with the new yaml.
+
+To see what changes will be applied, you can use the diff command.
+````
+k diff -f file.yaml
+k apply -f file.yaml
+````
+
+to delete the objects, you can use delete file or apply with --prune
+````
+k delete -f file
+k apply -f file --prune
+````
+
+to get the live object use 'k get -f file'
