@@ -249,4 +249,6 @@ k delete -f file
 k apply -f file --prune
 ````
 
-to get the live object use 'k get -f file'
+to get the live object use 'k get -f file -o yaml'. This will work like 'k get po'
+
+last applied config - this is also helpful to remove any field which are present in last applied but not present in live config, it will clear those fields from live object.
