@@ -104,3 +104,51 @@ Note: after v1.24, cri runtime endpoints were updated to remove dockershim.sock.
 ````
 crictl --runtime-endpoint
 export CONTAINER_RUNTIME_ENDPOINT=unix:///host/run/containerd/containerd.sock
+````
+
+# ETCD
+etcd is a key value store. it is like an object/document stored in json format. each object is stored as file hence change in one object doesn't affect another object.
+
+RAFT protocol is used for ha/distributed cluster.RAFT uses RPC commands to do various operation like RequestVote, AppendEntry, Leader election etc. election timeout is randomly set to avoid split vote.
+
+etcdctl is cli for interacting with etcd cluster. default api version is 2. Which uses set to set objects. while in v3 put is used to set objects. other notable difference is to get version. in v3, version is a command.
+
+etcd can be downloaded and deployed standalone from github. 
+if deployed via kubeadm, it is deployed as pod in kube-system namespace.
+
+every information about cluster is stored in etcd.i.e. pods,nodes,config,secrets, accounts, roles, bindings etc.
+Any change is marked completed after it is persisted to etcd.
+
+````
+ETCDCTL_API=3 ./etcdctl version
+````
+
+ETCD is run on 2379 port. below can be set as ip address for kube apiserver to reach etcd.
+````
+--advertise-client-urls https://${INTERNAL_IP}:2379
+````
+
+To connect to etcd cli, one way is to exec into pod and run etcdctl
+````
+k exec etc-master -n kube-system etcdctl get / --prefix --keys-only
+````
+
+Set initial-cluster command line option to set etcd service for ha.
+````
+--initial-cluster controller-0=https://${CONTROLLER0_IP}:2379,controller-1=https://${CONTROLLER1_IP}:2379
+````
+
+## commands
+To work with etcdctl
+````
+kubectl exec etcd-master -n kube-system -- sh -c "ETCDCTL_API=3 etcdctl get / --prefix --keys-only --limit=10 --cacert /etc/kubernetes/pki/etcd/ca.crt --cert /etc/kubernetes/pki/etcd/server.crt  --key /etc/kubernetes/pki/etcd/server.key"
+````
+Note that path of certs is /etc/kubernetes/pki/etcd . to specify the certs use option --cert, --key, --cacert
+
+api v3
+````
+etcdctl snasphsot save  (to take backup)
+etcdctl endpoint health
+etcdctl get
+etcdctl put
+````
