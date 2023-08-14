@@ -211,3 +211,20 @@ for example 2 nodes with cpu free 6 and 4. it will rank the node with 6 cpu as h
 You can also customize it and create your own scheduler also.
 
 you can run it as service (as separate), pod (kubeadm). you can also see it through ps aux, pod, systemd service.
+
+# Kubelet
+it is like capatain of the ship. point of contact for apiserver. 
+
+request the cre to create container
+
+It is always installed manually. it can't be done by kubeadm. use the ps aux to grep kubelet and see options
+
+# Kube-Proxy
+Application communicate in k8s cluster using kube proxy. It will watch for any service creation and try to ensure any pod/application is reachable to the dest application pod using that service.
+
+kube proxy is deployed on each node.
+
+Oneway to do this is with iptables. It will create an entry in the iptables for service's ip mapping it to pod ip on that node.
+
+As per my understanding, this could be possible because service is a virtual thing and just an exists as dns entry with ip (doesnt need to be dynamic like pod as it is not a container running) and which is mapped to the pods using end points. pods can't be used directly as their ip address is dynamic and can change after pod is restarted/crashed etc.
+
