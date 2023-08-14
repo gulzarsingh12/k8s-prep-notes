@@ -228,3 +228,6 @@ Oneway to do this is with iptables. It will create an entry in the iptables for 
 
 As per my understanding, this could be possible because service is a virtual thing and just an exists as dns entry with ip (doesnt need to be dynamic like pod as it is not a container running) and which is mapped to the pods using end points. pods can't be used directly as their ip address is dynamic and can change after pod is restarted/crashed etc.
 
+kubeadm deploy it as dameonset (pod)
+
+or can be installed from githu.
