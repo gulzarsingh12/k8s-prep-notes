@@ -25,11 +25,13 @@ k apply -f binding.yaml
 ````
 
 ## rest
-Only binding part as below
+Only binding part as below. created pod from cli. Also get the certs from `k config view`
 ````
-PODNAME=nginx
-curl --header "Content-Type:application/json" \
+curl -k --cert /root/cert.pem \
+--cacert /root/cacert.pem \
+--key /root/key.pem \
+--header "Content-Type:application/json" \
 --request POST \
---data '{ "apiVersion": "v1", "kind": "Binding", "metadata": { "name": "nginx" }, "target": { "apiVersion": "v1", "kind": "Node", "name": "node01" }}}'
-https://$SERVER/api/v1/namespaces/default/pods/$PODNAME/binding/
+--data '{ "apiVersion": "v1", "kind": "Binding", "metadata": { "name": "nginx" }, "target": { "apiVersion": "v1", "kind": "Node", "name": "node01" }}' \
+https://controlplane:6443/api/v1/namespaces/default/pods/nginx/binding/
 ````
