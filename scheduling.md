@@ -43,4 +43,4 @@ There are many use cases of daemonsets, one of the usecase is kube-proxy which k
 For user application, a monitoring agent or logviewer can be deployed on each node. this can ensure that agent is running if application pod is not and we want to taker some action or any other monitoring depending on use case.
 
 ## How it works
-Till v1.12, it used to set `nodeName` on each pod. since 1.12 it is using `nodeAffinity`
+Till v1.12, it used to set `nodeName` on each pod. since 1.12 it is setting `nodeAffinity` on each **pod**
