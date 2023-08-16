@@ -18,7 +18,7 @@ target:
   name: node01
 ````
 
-# cli
+## cli
 ````
 k run nginx --image=nginx
 k apply -f binding.yaml
@@ -35,3 +35,12 @@ curl -k --cert /root/cert.pem \
 --data '{ "apiVersion": "v1", "kind": "Binding", "metadata": { "name": "nginx" }, "target": { "apiVersion": "v1", "kind": "Node", "name": "node01" }}' \
 https://controlplane:6443/api/v1/namespaces/default/pods/nginx/binding/
 ````
+
+# DaemonSets
+Daemonsets are like replicaSet but but instead of ensuring no of replicas, it will ensure 1 pod on each node. We can try to create rs using imperative command then replace kind with DeamonSet
+
+There are many use cases of daemonsets, one of the usecase is kube-proxy which k8s does. another could networking. weavenent install an agent on each node. 
+For user application, a monitoring agent or logviewer can be deployed on each node. this can ensure that agent is running if application pod is not and we want to taker some action or any other monitoring depending on use case.
+
+## How it works
+Till v1.12, it used to set `nodeName` on each pod. since 1.12 it is using `nodeAffinity`
