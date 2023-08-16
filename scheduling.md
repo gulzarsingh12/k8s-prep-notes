@@ -72,3 +72,27 @@ then in kubeconfig.yaml define `--staticPodPath=/etc/kubernenets/manifests`
 Keep this in mind when debugging to check if podManifestPath and then config if not podMainfestPath found.
 
 There is no kubectl so docker ps can be used to view containers.
+
+# Multiple Scheduler
+We can configure custom scheduler if default scheduler can't work for some usecase. we can configure multiple scheuler with unique name. Default (kube-scheduler) is named as `default-scheduler`. 
+
+We can write our own scheduler and deploy it as service or pod/deployment. We need to set scheduler configuration and set it in options passed to scheduler.
+https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/
+
+````
+--config=/etc/kubernetes/my-scheduler/my-scheduler-config.yaml
+````
+
+## my-scheduler-config.yaml
+````
+apiVersion: kubescheduler.config.k8s.io/v1beta2
+kind: KubeSchedulerConfiguration
+profiles:
+  - schedulerName: my-scheduler
+leaderElection:
+  leaderElect: false
+````
+
+To use the scheduler, set `schedulerName` in the pod yaml file. If scheduler is not configured correctly then, pod will remain in pending state. You can see scheduler name in events too.
+
+to debug scheduler, view the logs of scheduler. if pod, then k logs <podname>
