@@ -85,10 +85,8 @@ https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers
 
 ## my-scheduler-config.yaml
 ````
-apiVersion: kubescheduler.config.k8s.io/v1beta2
-kind: KubeSchedulerConfiguration
-profiles:
-  - schedulerName: my-scheduler
+
+
 leaderElection:
   leaderElect: false
 ````
@@ -96,3 +94,80 @@ leaderElection:
 To use the scheduler, set `schedulerName` in the pod yaml file. If scheduler is not configured correctly then, pod will remain in pending state. You can see scheduler name in events too.
 
 to debug scheduler, view the logs of scheduler. if pod, then k logs <podname>
+
+## PriorityClass
+To set the prioroty of the pod, set property `priorityClassName` of the pod. To define the priority class, use below
+````
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 1000000
+globalDefault: false
+preemptionPolicy: Never   #Never,PreemptLowerPriority
+````
+
+**globalDefault** can be set to only one class. if set, all pods without priority class name will have this priority class name set to the pod.
+preemptionPolicy set to Never means, it will wait for resources to be free for scheduling the pod but not preempt any existing pod. In case of PreemptLowerPriority, it will preempt the lower priority pods. This is the default existing behaviour too.
+
+## How schedulking works
+There are 4 phases which run in scheduling
+
+### Scheduling process
+
+**Scheduling Queue -> Filtering -> Scoring -> Binding**
+
+#### Scheduling Queue
+Pod will be put into a queue to schedule. **PrioritySort** plugin can be used for this.
+
+#### Filtering
+There can be multiple plugins to filter the nodes to remove unfit nodes (**NodeResourcesFit**).
+Some other plugins are **NodeName**, **NodeUnschedulable**, **TaintsTolerations**, **NodeAffinity**, **NodePorts**
+It will filter nodes based on tains, toleration, affinity, cpu. memory etc also.
+
+#### Scoring
+After filtering, nodes elgibile for scheduling will be scored to find the best node for scheduling.
+some plugins are like **NodeResourcesFit**, **ImageLocality**
+If pod needs 10 cpus, 1 node have 12 cpu and another have 16 cpu. Then node with 16 cpu will have higher score/
+if some node have docker image already pulled for the pod container to run, it can be scored higher.
+
+#### Binding
+Once best node is identified, it will be bind to the pod.
+plugin can be **DefaultBinder**
+
+### Extension points
+Each phase have extenions points, these extension points can be used to extend the scheduling.
+This will help use the same scheduler with multiple profiles. since v1.18, we can use these extensions to use specific plugins at each extension point. we can enable/disable and attached custom plugins too. This can be set under profiles in scheduler configuration.
+Below are extension points
+
+Scheduing Queue :  **queueSort**
+Filtering: **preFilter**, **filter**, **postFilter**
+Scoring: **preScore**, **score**, **reserve**, **permit**
+Binding: **preBind**, **bind**, **postBind**
+
+reserve is done before binding to avoid race conditions to reserve the resources for pod on a node.
+permit - once plugins in permit approve the pod, it is sent to binding.
+
+### Scheduling profiles
+As mentioned above, with extension points, its possible to customnize the beahaviour of scheduling as per requirement instead of creating multiple schedulers. See below, how to use multiple schedulers using profiles
+````
+apiVersion: kubescheduler.config.k8s.io/v1
+kind: KubeSchedulerConfiguration
+profiles:
+  - schedulerName: my-scheduler1
+    plugins:
+      score:
+       disabled:
+        - name: TaintTolertion
+       enabled:
+        - name: MyCustomPluginA
+        - name: MycustomerPluginB
+  - schedulerName: my-scheduler2
+    plugins:
+      preScore:
+       disabled:
+        - name: '*'
+      score:
+       enabled:
+        - name: '*'
+````
