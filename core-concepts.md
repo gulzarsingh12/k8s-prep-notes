@@ -219,6 +219,8 @@ request the cre to create container
 
 It is always installed manually. it can't be done by kubeadm. use the ps aux to grep kubelet and see options
 
+Note: In kubelet, there is a plugin called **cAdvisor** which reports the performance metrics using kubelet api. These metrics can be then used by metrics server(Heapster deprecated and trimmed to create lighter version called metrics server) to show statistics. 
+
 # Kube-Proxy
 Application communicate in k8s cluster using kube proxy. It will watch for any service creation and try to ensure any pod/application is reachable to the dest application pod using that service.
 
