@@ -254,3 +254,28 @@ k apply -f file --prune
 to get the live object use 'k get -f file -o yaml'. This will work like 'k get po'
 
 last applied config - this is also helpful to remove any field which are present in last applied but not present in live config, it will clear those fields from live object.
+
+# Pods
+# Multi container
+Pods can run multiple containers in a single pod. all containers will share same fielsystem, volumes, network namespace, ip address, localhost etc.
+
+## But why do we need this?
+We break monolith applications into microservices. Each microserice does a specific job and a specific team can work on the service to make it agile. Sometimes, we might have resuable/common components that have same specific job to do but they are scattered across multiple microservices. For example, collecting jmx stats. This could be something required for multiple service and each have the duplicated code to get those stats.
+
+Hence microservices can be broken further into application logic and reusable coomponents. application is in one container and the reusable component is in other container.There could be multiple/common patterns found by developers per their usecases.
+Below are 3 common patterns identified for containers packaged into pods
+
+### Sidecar
+This is the pattern where containers share the filesystem. For example, one container writes into the filesystem and other read that from filesystem. 
+
+**Application Container** -> **Filesystem** -> **Log Saving container**
+
+### Ambassador
+In this pattern, Application container uses a proxy to connect to outside world. For example, application container uses proxy to connect to redis cluster. application will always hit localhost. So that will act as redis server for application. but proxy container will segregate the read and writes and will send the reads to redis worker nodes and writes to redis master node.
+
+**Application Container** -> **Proxy Ambassador container** -> **Redis Cluster (outside the pod)**
+
+### Adaptor
+Monitoring agent is an example of adaptor pattern. Application is running without any knowledge of adaptor container. Adaptor is monitoring the application and collecting stats.
+
+**Application Container** <- **Monitoring Adaptor container** <- **Centralized Monitoring System (outside the pod)**
