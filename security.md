@@ -193,3 +193,5 @@ Once the validation is completed then session key is exchanged with server. Serv
 RSA assymetric public key is not required anymore for the session as session key is securily exchanged. 
 
 Why can't we use **RSA** key for encrypting subsequent requests? Because it is **slow**. **symmetric** key is **faster** for encryption and decryption. hence once session is established, **assymtric** key is not required for that session.
+
+This whole process of cryptgraphy to secure the user data is called **PKI (Public key infrastructure)**
