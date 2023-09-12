@@ -114,3 +114,82 @@ lrwxrwxrwx 1 root root 12 Aug 24 06:00 token -> ..data/token
 lrwxrwxrwx 1 root root 16 Aug 24 06:00 namespace -> ..data/namespace
 lrwxrwxrwx 1 root root 13 Aug 24 06:00 ca.crt -> ..data/ca.crt
 ````
+
+# TLS Basics
+When we transfer data over network, we want to ensure nobody else can understand. we can scramble/encrypt the data. 
+
+But how? There are plenty of cipher suites available for that. SSL cipher suites are considered insecure these days so not a recommended way to encrypt data. **SSL** v1 to v3 are available. As these are considered insecure, TLS is the current way to encrypt data. TLS v1 and v1.2 is considered less secure. In most browsers, **TLS** v1.3 cipher suites are used.
+
+To encrypt data, we need a secret/encryption key. There are 2 types of encyption keys available.i.e. symmetric key, asymmetric key. A **symmetric** key is an encyption key used in encyption algorithms when encyption and decryption of data is done using the **same key**. An **asymmetric** key is **public/private** key encryption. Public key is used to encrypt the data and private key is used to decrypt the data.  However, it is possible to use either key to encrypt data and other key to decrypt data in case of **RSA**. It means, if you encrypt data with public key, you can decrypt data with private key but vice versa is true. Please note that not all the algorithm support that.
+
+## Certificate Validation
+There are 3 types of validation for certificates
+
+### Extended Validation certificates (EV)
+This is the most stringent validation process. It has highest level of encryption, validation and trust. It includes business physical address, proper certificate application and exclusive right to use the domain.
+
+This is mostly used for protecting sensitive data such as financial transactions, medical records etc.
+
+### Organization Validation certificates (OV)
+This is the less stringent validation process than EV. Applicants must prove ownership to the domain.
+
+commerical business use these certificates to build the trust among customers.
+
+### Domain Validation certificates (DV)
+This is the least stringent validation process among three. Applicants can prove ownership by responding to email or phone call.
+
+It doesn't provide complete information about applicant's organization/business. It does not provide high assurance to users hence it is more suitable for usecases like blogs etc.
+
+## Certificate domains
+There are 3 types of domains of certtificates
+
+### Single domain
+These are certificates to protect only one domain or subdomain. For example, https://example.com. User can't use it even for subdomain like http://blog.example.com.
+
+### Wildcard
+It will protect domain and as well as sub domains. For example, http://example.com, http://blog.example.com, http://shop.example.com etc.
+
+### Multi-domain
+It will protect multiple domains. For example, http://example1.com, http://domain2.co.uk, http://shop.business3.com etc.
+
+## How TLS works
+I am explaining below TLS end to end with steps below:
+
+### Process
+
+#### Handshake Phase
+##### Client Hello
+Client/browser will send Hello message to server which includes the information about supported cipher suites and a random value.
+##### Server Hello
+Server will respond to hello message and selecting the cipher suite etc. and a random value
+
+##### Key exchange
+Server will send its public key certificate other key key exchange information. Server may share additonal exchange information like PSK (PreSharedKey)
+
+##### Key Derivation
+Using the information exchaged between client and server and random values from both sides, a shared secret is derived.
+
+#### Session Key Generation
+client will generate a symmteric session key from the shared secret. a KDF(Key derivatiob function) is used to derive the session key, initial vector (IV) from shared secret.
+
+Using RSA or ECDH (Diffie Hellman) key exchange mechanism, client will encrypt the session key using RSA/ECDH assymetric key (public key) and send to the server to be used for future communication.
+
+#### Data Exchange
+Once session key is shared with server, client will use the session key to ecnypt data to send to server and which server can decypt.
+
+#### Session Termination
+Once the session is terminated, session key is no longer used, future session will initate the same process above for handshake and establish new session.
+
+### Process In detail
+When public key certifficate is recieved, it will be verified. To get the verifiable certificate, it has to be come from CA.
+
+Server will generate a private key using any ssl tool. for example openssl. Using **openssl**, rsa private key is generated.
+Using private key, a **CSR** (Certificate signing request) is created and send to CA. CA will create a public key certificate. It will contain **public key, digitial singature** signed by CA using CA's private key and other informtion like **CN**, **SAN** etc.
+
+Once the public key certificate is received by client, it will read the certitficate and get **digital dignature** signed by **CA** using its **private** key. It will **validate** the **signature** using CA **public** key. It is possible that the CA used by server certificate might be an **intermediate** CA which has further CA in the hierarchy. client will **continue** the **validation** across the chain till its reaches the **root** Certificate. Once it will reach one of the **root CA stored in browser**/operating implicitly. if any of the CA validation **failed**, it will fail the validation check. Root CA are **publically available already on all the browser** or opeerating system so it is not requested during the validation from web.
+
+Once the validation is completed then session key is exchanged with server. Server send the **acknowledgment** back encrypted using the session key. if client is able to decrypt acknowldgement and validate then handshake is completed and future communication will happen using the session key. 
+
+RSA assymetric public key is not required anymore for the session as session key is securily exchanged. 
+
+Why can't we use **RSA** key for encrypting subsequent requests? Because it is **slow**. **symmetric** key is **faster** for encryption and decryption. hence once session is established, **assymtric** key is not required for that session.
