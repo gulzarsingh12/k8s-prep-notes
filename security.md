@@ -227,4 +227,4 @@ openssl req -new -key admin.key -out admin.csr -subj "/CN=kube-admin/O=system:ma
 openssl x509 -req -in admin.csr -CAKey ca.key -CA ca.crt -out admin.crt
 ````
 
-Please note that CN name for control plane components like kube-scheduler, kube-controller-manager, kube-proxy should have prefix system.i.e. system:kube-scheuler.
+Please note that CN name for control plane components like kube-scheduler, kube-controller-manager, kube-proxy should have prefix system.i.e. system:kube-scheduler.
