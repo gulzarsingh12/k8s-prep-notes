@@ -195,3 +195,36 @@ RSA assymetric public key is not required anymore for the session as session key
 Why can't we use **RSA** key for encrypting subsequent requests? Because it is **slow**. **symmetric** key is **faster** for encryption and decryption. hence once session is established, **assymtric** key is not required for that session.
 
 This whole process of cryptgraphy to secure the user data is called **PKI (Public key infrastructure)**
+
+# Certificate Creation
+To create a certificate, following steps are required. We are using openssl.
+
+## CA
+**private key**
+````
+openssl genrsa -out ca.key 2048
+````
+**csr**
+````
+openssl req -new -key ca.key -out ca.csr -subj "/CN=KUBERNETES-CA"
+````
+**CA cert**
+````
+openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt
+````
+
+## Client
+**private key**
+````
+openssl genrsa -out admin.key 2048
+````
+**csr**
+````
+openssl req -new -key admin.key -out admin.csr -subj "/CN=kube-admin/O=system:masters"
+````
+**public key cert**
+````
+openssl x509 -req -in admin.csr -CAKey ca.key -CA ca.crt -out admin.crt
+````
+
+Please note that CN name for control plane components like kube-scheduler, kube-controller-manager, kube-proxy should have prefix system.i.e. system:kube-scheuler.
