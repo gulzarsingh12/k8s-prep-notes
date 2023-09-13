@@ -24,7 +24,7 @@ This is the primary component to manage all the communication between controlpla
 It is an agent running on each node. it will periodicaally fetch status from api server and run the containers based on the informartion. it will also give back the information on the status and health o the cluster.
 
 ### Kube-proxy
-A pod can be scheuled on any worker node. So how to enable communication between containers/pods across the nodes? Kube proxy does this. it will define the rules etc to ensure this.
+A pod can be scheuled on any worker node. So how to enable communication between containers/pods across the nodes? Kube proxy does this. it will define the network rules to ensure this.
 
 ## CRE(Container runtime Interface. e.g.Docker, ContainerD or rkt)
 This is required to run the controlplane(components deployed as containers) and user workload on worker nodes.
@@ -213,7 +213,7 @@ You can also customize it and create your own scheduler also.
 you can run it as service (as separate), pod (kubeadm). you can also see it through ps aux, pod, systemd service.
 
 # Kubelet
-it is like capatain of the ship. point of contact for apiserver. 
+it is like captain of the ship. point of contact for apiserver. 
 
 request the cre to create container
 
