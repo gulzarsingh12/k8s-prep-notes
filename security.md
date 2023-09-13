@@ -230,3 +230,8 @@ openssl x509 -req -in admin.csr -CAKey ca.key -CA ca.crt -out admin.crt
 Please note that CN name for control plane components like kube-scheduler, kube-controller-manager, kube-proxy should have prefix system.i.e. system:kube-scheduler.
 
 For kubelet, it should be the node name. i.e. system:node:node01
+
+**To view certificate**
+````
+openssl x509 -in apiserver.crt -nout -text
+````
