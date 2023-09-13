@@ -235,3 +235,9 @@ For kubelet, it should be the node name. i.e. system:node:node01
 ````
 openssl x509 -in apiserver.crt -nout -text
 ````
+
+## View Logs
+To view service logs
+````
+journalctl -u etcd.service -l
+````
