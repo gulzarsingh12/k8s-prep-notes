@@ -241,3 +241,12 @@ To view service logs
 ````
 journalctl -u etcd.service -l
 ````
+
+# Image
+When we write 'image: nginx' in pod template, it means 'library/nginx' . 
+''''
+gcr.io/library/nginx
+''''
+First part can be your registry name
+second part is user/account name
+third part is image name.
