@@ -244,9 +244,34 @@ journalctl -u etcd.service -l
 
 # Image
 When we write 'image: nginx' in pod template, it means 'library/nginx' . 
-''''
+````
 gcr.io/library/nginx
-''''
+````
 First part can be your registry name
 second part is user/account name
 third part is image name.
+
+## private registry
+- create docker-registry secret
+- set imagePullSecrets under pod template
+  ````
+  imagePullSecrets:
+    - name: reg-cred
+  ````
+
+## Docker security
+To run as non root
+````
+docker run --user=1000 ubuntu sleep 3600
+````
+Another way is to put in docker image 'USER 1000'
+
+To add/remove linux capabilities
+````
+docker run --cap-add=MAC_ADMIN ubuntu sleep 3600
+docker run --cap-drop=MAC_ADMIN ubuntu sleep 3600
+````
+To give all capabilities
+````
+docker run --previleged ubuntu
+````
