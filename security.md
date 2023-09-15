@@ -275,3 +275,16 @@ To give all capabilities
 ````
 docker run --previleged ubuntu
 ````
+
+## Security Context
+To set security context, it can be at pod level or container level.
+````
+securityContent:
+  runAsUser: 1000
+````
+capabilities can be set at container level only
+````
+securityContext:
+  capabilities:
+     add: [MAC_ADMIN]
+````
