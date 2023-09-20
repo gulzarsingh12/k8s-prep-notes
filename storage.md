@@ -139,9 +139,16 @@ Similarily, any storage driver can be used on kubernetes if it conforms to CSI. 
 
 
 # Volumes
-volumes can be provided locally from local filesystem or cloud provider like aws,azure,gce etc. or nfs, flocker, glusterfs etc
+Volumes in kubernetes is like a host/bind mount in docker. where explicit directory is provided. In a pod, as below
+````
+volumes:
+  - name: my-vol
+    emptyDir: {}
+````
+It is an abstraction that represents a storage in kubernetes for a pod. Data is stored till pod is running and shared within the containers in the pod.
 
 ## Persistent Volumes (PV)
+It is like named volume in docker. It can created independently from pods configuration and managed by kubernetes.
 This is kubernetes volumes created for a volume type. For example hostPath. It can be created by administrator to avail the storage for pods.
 
 ## Persistent Volume Claim (PVC)
@@ -160,3 +167,6 @@ when pvc is deleted, pv is deleted too.
 
 # Recycle
 When pvc is deleted, pv data is scrambled and made available to be reused.
+
+## Storage Class
+
