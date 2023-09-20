@@ -126,3 +126,13 @@ This is applicable for windows containers and uses named pipe for inter containe
 ````
 docker run --rm --mount type=npipe,source=namedpipe,target=/container/path microsoft/windowsservercore
 ````
+
+# Container Storage Interface (CSI)
+Kubernetes support multiple runtimes.i.e. docker, crio, rkt etc. This is possible due to CRI (Container runtime interface)
+
+So any runtime engine which confirms to CRI can be used in kubernetes. 
+
+Similarily, any storage driver can be used on kubernetes if it conforms to CSI. For example, RPC calls like below are implemented by storage drivers
+- CreateVolume
+- Deletevolume
+- ControllerPublishVolume
