@@ -162,10 +162,10 @@ pvc policy can be set to Retain, Delete or Recycle
 #### Retain
 When pvc is deleted, pv is retained and data is not deleted.
 
-# Delete
+#### Delete
 when pvc is deleted, pv is deleted too.
 
-# Recycle
+#### Recycle
 When pvc is deleted, pv data is scrambled and made available to be reused.
 
 ## Storage Class
