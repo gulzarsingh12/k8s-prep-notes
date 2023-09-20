@@ -169,4 +169,9 @@ when pvc is deleted, pv is deleted too.
 When pvc is deleted, pv data is scrambled and made available to be reused.
 
 ## Storage Class
+What is wrong with PVs? Isn't is an effort to manually create a PV for each PVC? Isn't it inefficient to create PV's for PVC's before creating pods. What about dynamic provisioning? why not provision storage when required. Isn't it more efficient to create a PV when PVC is created. This way we dont need to worry about ensuring each PVC has PV because its dynamic. It is more scalable and suits for large no of requests. Also there is no need of administrator's manual intervention when PV is needed.
 
+Storage class policy can manage the lifecycle for PV's. So with SC, you still create Pv's but not manually and on demand from PVC. 
+
+SC can be created for different use cases like no of IOPs, latency(SSD vs HDD), access modes etc. configuration parameters can be provided to SC depending on the provisioner. 
+Provisioner can be like kubernetes.io/aws-ebs,kubernetes.io/azure-disk, kubernetes.io/gce-pd etc. This will interact with infrastructure and provision the PV.
