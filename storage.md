@@ -136,3 +136,27 @@ Similarily, any storage driver can be used on kubernetes if it conforms to CSI. 
 - CreateVolume
 - Deletevolume
 - ControllerPublishVolume
+
+
+# Volumes
+volumes can be provided locally from local filesystem or cloud provider like aws,azure,gce etc. or nfs, flocker, glusterfs etc
+
+## Persistent Volumes (PV)
+This is kubernetes volumes created for a volume type. For example hostPath. It can be created by administrator to avail the storage for pods.
+
+## Persistent Volume Claim (PVC)
+This is the created by user to attach to PV created by administrator. There is 1:1 relationship between PV and PVC. If there is one PV available and 2 PVC are created the 1 PVC will be bounded and another will wait for a PV to be available.
+
+dont confuse with 1:1 relationship between pv and pvc. pods and pvc can have 1:many relationship. which means multiple pods can read from same pv.
+
+### PersistentVolumeClaimPolicy 
+pvc policy can be set to Retain, Delete or Recycle
+
+#### Retain
+When pvc is deleted, pv is retained and data is not deleted.
+
+# Delete
+when pvc is deleted, pv is deleted too.
+
+# Recycle
+When pvc is deleted, pv data is scrambled and made available to be reused.
