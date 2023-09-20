@@ -108,6 +108,7 @@ docker inspect named-vol
 ````
 it will show the driver and mount details
 
+
 Another exmaple for aws ebs volume can be as below:
 ````
 docker run --volume-driver rexray/ebs --mount src=ebs-vol,target=/var/lib/mysql
