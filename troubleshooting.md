@@ -39,8 +39,11 @@
 
 # Networking
 
-- Check if cni plugin is installed. Check `/etc/cni/network.d` `/opt/cni/bin`
-- check cni
+- Check if cni plugin is installed. Check `/etc/cni/net.d` for cni conf and `/opt/cni/bin` for cni bin dir.
+- Check cni network plugin, cni bin, cni conf dir in `ps -aux | grep kubelet`
+- conf file will have name which should be present in cni/bin.
+- if multiple conf files, then it will read in ls lrt order.
+- Check if pods are running. for example if its weavenet, `k get po -n kube-system`, check if pods with weave are running.
 
 ## Download
 
@@ -60,4 +63,13 @@ wget https://raw.githubusercontent.com/projectcalico/calico/v3.26.3/manifests/ca
 ````
 
 ## CoreDns
-Check the 
+- Check the core-dns pods are running
+- check the kube-dns service in running. check endpoints etc. Check config file etc
+- check logs for container or systemctl etc.
+- Check configmap is mounted as volume for config file etc
+
+## Kube-proxy
+- Check if kube proxy deamon set is running. `k get ds -n kube-system`.
+- Check configmap is mounted as volume for config file etc
+- check kube-proxy is running inside container `netstat -plan`
+
