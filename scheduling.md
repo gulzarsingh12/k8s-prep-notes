@@ -36,6 +36,19 @@ curl -k --cert /root/cert.pem \
 https://controlplane:6443/api/v1/namespaces/default/pods/nginx/binding/
 ````
 
+# Labels & Selectors
+## Labels
+- To get the pods using label selector
+  ````
+  k get po -l env=dev
+  ````
+- `-l or --selector` can be used to select the labels.
+- To apply filter you can use `in for multiple values` like
+  ````
+  k get po -l 'env in (dev,prod)'
+  ````
+  
+
 # DaemonSets
 Daemonsets are like replicaSet but but instead of ensuring no of replicas, it will ensure 1 pod on each node. We can try to create rs using imperative command then replace kind with DeamonSet
 
