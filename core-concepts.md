@@ -280,5 +280,11 @@ Monitoring agent is an example of adaptor pattern. Application is running withou
 
 **Application Container** <- **Monitoring Adaptor container** <- **Centralized Monitoring System (outside the pod)**
 
-## ReplicaSet vs Deployment
+# Deployment
 As per my understanding, we need deployment to make upgrading/updating application easy. We can ensure no of desired pods  using replica sets. With deployment with roll updates using many deployment strategies like blue-green, canary etc.
+
+# Namespaces
+- isolation of environments like dev, prod etc
+- limit the resource for namespace using `ResourceQuota` etc.
+- `k create -f file.yaml -n dev` to create resource in dev namespace if not specified in file.
+- `k config set-context $(k config current-context) -n dev` will set the dev namespace in the current context and all queries will go to dev namespace.
