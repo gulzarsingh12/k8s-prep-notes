@@ -47,6 +47,10 @@ https://controlplane:6443/api/v1/namespaces/default/pods/nginx/binding/
   ````
   k get po -l 'env in (dev,prod)'
   ````
+- Multiple labels
+  ````
+  k get po -l env=prod,bu=finance,tier=frontend
+  ````
   
 
 # DaemonSets
