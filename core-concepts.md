@@ -256,7 +256,7 @@ to get the live object use 'k get -f file -o yaml'. This will work like 'k get p
 last applied config - this is also helpful to remove any field which are present in last applied but not present in live config, it will clear those fields from live object.
 
 # Pods
-# Multi container
+## Multi container
 Pods can run multiple containers in a single pod. all containers will share same fielsystem, volumes, network namespace, ip address, localhost etc.
 
 ## But why do we need this?
@@ -279,3 +279,6 @@ In this pattern, Application container uses a proxy to connect to outside world.
 Monitoring agent is an example of adaptor pattern. Application is running without any knowledge of adaptor container. Adaptor is monitoring the application and collecting stats.
 
 **Application Container** <- **Monitoring Adaptor container** <- **Centralized Monitoring System (outside the pod)**
+
+## ReplicaSet vs Deployment
+As per my understanding, we need deployment to make upgrading/updating application easy. We can ensure no of desired pods  using replica sets. With deployment with roll updates using many deployment strategies like blue-green, canary etc.
