@@ -96,6 +96,15 @@ affinity:
 ````
 so it wil place the pod on node with disktype in ssd.
 
+# Resource Requirements
+- there are 2 type of resource request limits
+- 1. requests. 2. limits
+- request is what you are requesting and limit is what the max limit
+
+As cluster is shared between different teams because nodes are deployed with the cluster. To constraint the resource usage for individual teams, `ResourceQuota` is defined at namespace level. So resource can be maxed out till the namespace resource quota limit but it cant take resource for other namespaces. 
+
+However, there is still a problem exists in the namespace level. What if some container/pods take all the namespace level resources? This can be solved by setting the limits at container level. `LimitRange` is used to set the default, defaultRequest, min, max etc at container level.
+
 # DaemonSets
 Daemonsets are like replicaSet but but instead of ensuring no of replicas, it will ensure 1 pod on each node. We can try to create rs using imperative command then replace kind with DeamonSet
 
