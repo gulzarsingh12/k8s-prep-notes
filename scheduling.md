@@ -52,6 +52,49 @@ https://controlplane:6443/api/v1/namespaces/default/pods/nginx/binding/
   k get po -l env=prod,bu=finance,tier=frontend
   ````
   
+# Taints & tolerations
+Taint is defined on noded and tolerations on pod to allow nodes the pods with tolerations.
+- `k taint node node01 spray=mortein:NoSchedule` to create taint on node01
+- ````
+  tolerations:
+  - key: "spray"
+    operator: "Equal"
+    value: "mortein"
+    effect: "NoSchedule"
+  ````
+  to creat toleration on pod.
+- To remove the taint on node `k taint node node01 spray=mortein:NoSchedule-` simply add - (dash)
+
+# NodeSelector
+- add below to the pod
+  ````
+  nodeSelector:
+    size: large
+  ````
+  label `size=large` should exist on node to schedule the above pod on this node.
+- However it can't handle complex usecase
+  - like size large or medium
+  - not small
+  For this, use nodeAffinitiy
+- `NoSchedule` means not to schedule any pod after the taint is applied but existing pod will be running
+- `NoExecute` means no pods allowed without tolerations. if a pod is running without toleration then it will be evicted.
+- `PreferNoSchedule` is a "preference" or "soft" version of NoSchedule. The control plane will try to avoid placing a Pod that does not tolerate the taint on the node, but it is not guaranteed.
+
+
+# NodeAffinity
+similar to nodeselector but this is more pwerful because it provides filter 
+````
+affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: disktype
+            operator: In
+            values:
+            - ssd  
+````
+so it wil place the pod on node with disktype in ssd.
 
 # DaemonSets
 Daemonsets are like replicaSet but but instead of ensuring no of replicas, it will ensure 1 pod on each node. We can try to create rs using imperative command then replace kind with DeamonSet
