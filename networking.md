@@ -35,3 +35,9 @@ ip addr show eth0
 ````
 netstat -plnt
 ````
+
+# CNI
+
+# Pod Networking
+Below are the requirements for any network plugin to implement the networking for pods
+- 
