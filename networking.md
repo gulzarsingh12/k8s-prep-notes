@@ -22,6 +22,15 @@ ip link show eth0
 ip addr show eth0
 ````
 
+#### netstat
+`netstat -plant`
+- -n  to show the ip addresses and dont show the dns name like localhost instead of 127.0.0.1
+- -p  to show the program name or pid. like kube-scheduler etc.
+- -l  to show the listening ports
+- -a  to show all the ports connected or not
+- -t  to show only tcp ports
+
+
 #### To use check the port listening on node
 ````
 netstat -plnt
