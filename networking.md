@@ -7,3 +7,22 @@ Below is how kubernetes does it.
 docker run --network=none nginx
 bridge add **fefemfduw** /var/run/netns/**fefemfduw**
 ````
+
+# CNI
+
+#### To show the network type. For example to show the interface for bridge network
+````
+ip addr show type bridge
+ip link show type bridge
+````
+
+#### To see the interface details with name
+````
+ip link show eth0
+ip addr show eth0
+````
+
+#### To use check the port listening on node
+````
+netstat -plnt
+````
