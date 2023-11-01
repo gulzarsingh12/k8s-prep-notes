@@ -64,3 +64,4 @@ tr -d '\n'
 - `iptables -L -t nat | grep db-service` will rule configured for the db-service ip. For example all traffic for 10.103.132.104 (service ip) will go to 10.244.1.2:3306 (pod). In case of nodeport, port is also configured for service. 
 - Whenever a service is added then entry for the corresponding ip of the service for pods is added into iptables of the kube proxy
 - the same addition of entry can be seen in logs. `/var/log/kube-proxy.log` Location of the logs may differ and this log sttement also depends on the verbosity of the log.
+- use `ipcalc` utility to find the ip address range for given ip range. example `ipcalc -b 192.6.31.6`
