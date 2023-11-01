@@ -69,3 +69,9 @@ tr -d '\n'
 - use `ipcalc` utility to find the ip address range for given ip range. example `ipcalc -b 192.6.31.6`
 - Check `k logs <proxy pod>`  to find the proxy mode. or may be config. if not specified then it is iptables.
 - kube-proxy and cni plugin (weave net) are deployed using daemonset to ensure one pod per node.
+
+## Dns
+- To resolve names for ip.
+- usually preferred to have service name ip mapping as pods ip changes. as service is updated when pod ip changes then this is fine as long as service is found in dns as it has virtul ip which wont change.
+- to access the service in same namespace  `curl http:///web-service` but in different namespace it is  `curl http:///web-service.dev` where `dev` is namespace. you can use FQDN also.
+- A record for pods are not created but can be enabled. disabled by default. but it will have - (dash) in the name replace for dot in ip. like 10-244-1-15.
