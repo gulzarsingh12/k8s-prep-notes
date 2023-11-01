@@ -75,3 +75,31 @@ tr -d '\n'
 - usually preferred to have service name ip mapping as pods ip changes. as service is updated when pod ip changes then this is fine as long as service is found in dns as it has virtul ip which wont change.
 - to access the service in same namespace  `curl http:///web-service` but in different namespace it is  `curl http:///web-service.dev` where `dev` is namespace. you can use FQDN also.
 - A record for pods are not created but can be enabled. disabled by default. but it will have - (dash) in the name replace for dot in ip. like 10-244-1-15.
+
+## Core Dns
+- kubelet has configured dns nameserver as `--clusterDNS=10.96.0.10` and TLD as `--clusterDomain=cluster.local`
+- whenever a pod is create, kubelet add a `/etc/resolv.conf` with ip address of kube-dns service as configured above.i.e. `nameserver 10.96.0.19`
+- it also add `search default.svc.cluster.local svc.cluster.local cluster.local` entr. it will allow to automatically try below when searching the dns. for example `web` will tried as `web, web.default, web.default.svc,web.default.svc.cluster.local` whichever works is fine.
+- it will save all the ip address and name in `/etc/hosts` in dns server as confiure in core file.
+- core dns is the pod and kube-dns is service. core-dns is the newer and replacement of older kube-dns version. dont confuse with service name though.
+- deployed using replica-set/deployment to ensure HA.
+- core file is configured at `/etc/coredns/Corefile` which can be mounted via config map. so that if you need to change it is easy.
+- coredns is configured to have kubernetes plugin to work with kubernetes cluster as below.
+ ````
+ .:53 {
+   errors
+   health
+   kubernetes cluster.local in-addr.arpa ip6.arpa {
+     pods insecure
+     upstream
+     fallthrough in-addr.arpa ip6.arpa
+   }
+   prometheus :9153
+   proxy . /etc/resolv.conf
+   cache 30
+   reload
+ }
+ ````
+- after plugin name kubernetes, there is cluster.local which top level domain (TLD)
+- pods insecure will enable the pod names in coredns but they are not actual pod names but there ip address with dashes.
+- proxy have etc/resolv.conf which can be host nameserver and can be used to reach any address outside. for example google.com wont be find in cluster and hence tried using this file.
