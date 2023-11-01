@@ -40,8 +40,15 @@ ip addr show eth0
 netstat -plnt
 ````
 
-# CNI
+### Deploy cni plugins
 
-# Pod Networking
-Below are the requirements for any network plugin to implement the networking for pods
-- 
+#### Weave net
+wget https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
+k apply -f weave-daemonset-k8s.yaml
+
+#### Flannel
+wget https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+k apply -f kube-flannel.yml
+
+
+## Pod Networking
