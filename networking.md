@@ -68,3 +68,4 @@ tr -d '\n'
 - the same addition of entry can be seen in logs. `/var/log/kube-proxy.log` Location of the logs may differ and this log sttement also depends on the verbosity of the log.
 - use `ipcalc` utility to find the ip address range for given ip range. example `ipcalc -b 192.6.31.6`
 - Check `k logs <proxy pod>`  to find the proxy mode. or may be config. if not specified then it is iptables.
+- kube-proxy and cni plugin (weave net) are deployed using daemonset to ensure one pod per node.
