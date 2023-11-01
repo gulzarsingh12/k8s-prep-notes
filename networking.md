@@ -10,6 +10,9 @@ bridge add **fefemfduw** /var/run/netns/**fefemfduw**
 
 # CNI
 
+# Kubelet CNI Config
+- In kubelet configuration check cni config at `--cni-conf-dir=/etc/cni/net.d` and cni binary at `--cni-bin-dir/etc/cni/bin`
+
 #### To show the network type. For example to show the interface for bridge network
 ````
 ip addr show type bridge
