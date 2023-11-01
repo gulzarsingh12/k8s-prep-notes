@@ -50,5 +50,9 @@ k apply -f weave-daemonset-k8s.yaml
 wget https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
 k apply -f kube-flannel.yml
 
+#### Remove \n from text
+````
+tr -d '\n'
+````
 
 ## Pod Networking
