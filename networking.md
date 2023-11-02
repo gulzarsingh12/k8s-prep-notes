@@ -120,3 +120,9 @@ However there are controllers which works without this annotation. Such an examp
 Note that this ingress controller is not managed by controller manager.
 
 `default-backend` service can be configured to display error message when no route matches.
+
+### controller class beahviour
+While searching for the link between controller and ingress classe based on the .spec.controller field in the IngressClass, I could trace the controller/deployment from ingress class based on the controller field.
+
+However below is my theory about how it might be working. 
+As ingress controller is run as a deployment and dont have any link to controller manager, it might be looking for any ingress resources. for example if a resource has a ingress class name defined matching the controller field, then it might select those resources. so even if the ingress resource doesnt have a ingressClassName then it will consider it a match as nginx allow resources without the ingressClassName defined.
