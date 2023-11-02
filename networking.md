@@ -103,3 +103,20 @@ tr -d '\n'
 - after plugin name kubernetes, there is cluster.local which top level domain (TLD)
 - pods insecure will enable the pod names in coredns but they are not actual pod names but there ip address with dashes.
 - proxy have etc/resolv.conf which can be host nameserver and can be used to reach any address outside. for example google.com wont be find in cluster and hence tried using this file.
+
+# Ingress
+
+Kubernetes has service as a virtual thing to connect to pods. However, service has other limitations like it can be either cluster ip (only accesible inside the cluster) or nodePort (accesible on the tcp socket/port of the worker node). it is security issue to expose the node port. We need some other mechanism to abstract this to improve security. Load balancer is another way to do that but that is only applicable for clouds. Even though it solves the problem on cloud but it can be expensive for a large application which many microservices as it will get expensive to pay for may load balancer. 
+
+**What is the alternative then?**
+Ingress is the solution which can solve this problem and many others. It acts as reverse proxy. it will reroute the request to right microservice. it can also do ssl termination. Loader balancing is another feature it has. 
+
+## Ingress controller
+How this works? whenever a request comes, it will check the ingress configuration and reroute to the right service. it will start a controller using a deployment and listen for any requests. it will expose a service which will listen on port 80 and 443 and then forward the requerst to right service. ingress controller is deployed as pod using deployment and service. it will expose configuration option though config map.
+There can be multiple ingress contollers so how ingress resource will picked? Older way is to define the annoation `kubernetes.io/ingress.class` on ingress resource. However, in newer versions, a separate field is defined 'ingressClassName'. 
+what about default? when ingressClassName is not defined? then it will be picked by the ingressclass which has annotation `ingressclass.kubernetes.io/is-default-class` set to true. If multiple classes has this annotation true then controller manager will complain about this.
+However there are controllers which works without this annotation. Such an example is nginx. it will work if flag `--watch-ingress-without-class` is set.
+
+Note that this ingress controller is not managed by controller manager.
+
+`default-backend` service can be configured to display error message when no route matches.
