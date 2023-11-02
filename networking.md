@@ -125,4 +125,24 @@ Note that this ingress controller is not managed by controller manager.
 While searching for the link between controller and ingress classe based on the .spec.controller field in the IngressClass, I could trace the controller/deployment from ingress class based on the controller field.
 
 However below is my theory about how it might be working. 
-As ingress controller is run as a deployment and dont have any link to controller manager, it might be looking for any ingress resources. for example if a resource has a ingress class name defined matching the controller field, then it might select those resources. so even if the ingress resource doesnt have a ingressClassName then it will consider it a match as nginx allow resources without the ingressClassName defined.
+As ingress controller is run as a deployment and dont have any link to controller manager, it might be looking for any ingress resources. for example if a resource has a ingress class name defined matching the controller field, then it might select those resources. so even if the ingress resource doesnt have a ingressClassName then it will consider it a match as nginx allow resources without the ingressClassName defined (see below `watch-ingress-without-class`)
+
+this understanding is based on below from deployment of nginx ingress controller
+````
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingress-nginx-controller
+spec:
+  template:
+    spec:
+      containers:
+      - args:
+        - /nginx-ingress-controller
+        - --publish-service=$(POD_NAMESPACE)/ingress-nginx-controller
+        - --election-id=ingress-controller-leader
+        - **--watch-ingress-without-class=true**
+        - --default-backend-service=app-space/default-backend-service
+        - **--controller-class=k8s.io/ingress-nginx**
+        - **--ingress-class=nginx**
+````
