@@ -288,3 +288,21 @@ securityContext:
   capabilities:
      add: [MAC_ADMIN]
 ````
+
+# Encryption at rest
+By default any secret stored in etcd is not secure and is in plain text. Only that when you query secrets, it shows in base64 encoded but this is not secure and can be easily decoded. To encrypt te data at rest in etcd, we need to create the EncryptionConfiguration and set it to apiserver as config option `--encryption-provider-config=<path to yaml file>`
+See the yaml file as below:
+````
+apiVersion: apiserver.config.k8s.io/v1
+kind: EncryptionConfiguration
+resources:
+  - resources:
+      - secrets
+    providers:
+      - identity: {} # plain text, in other words NO encryption
+      - aesgcm:
+          keys:
+            - name: key1
+              secret: c2VjcmV0IGlzIHNlY3VyZQ==
+````
+Make sure to mount the volume to povide this configuration to api server.
