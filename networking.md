@@ -43,12 +43,16 @@ netstat -plnt
 ### Deploy cni plugins
 
 #### Weave net
-wget https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
-k apply -f weave-daemonset-k8s.yaml
+`wget https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml`
+`k apply -f weave-daemonset-k8s.yaml`
 
 #### Flannel
-wget https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
-k apply -f kube-flannel.yml
+`wget https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml`
+`k apply -f kube-flannel.yml`
+
+#### Calico
+`wget https://raw.githubusercontent.com/projectcalico/calico/v3.26.3/manifests/calico.yaml`
+`k apply -f calico.yaml`
 
 #### Remove \n from text
 ````
