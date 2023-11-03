@@ -1,3 +1,7 @@
+# Commands
+- to get cluster info `k cluster-info`
+- to know component status `k get componentstatues`
+
 # Application Failure
 
 ### Service
