@@ -276,6 +276,10 @@ To give all capabilities
 docker run --previleged ubuntu
 ````
 
+To list capabilities
+- Install utility `apt install libcap-ng-utils`
+- Run command `netcap`
+
 ## Security Context
 To set security context, it can be at pod level or container level.
 ````
