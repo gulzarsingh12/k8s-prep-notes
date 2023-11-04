@@ -44,4 +44,14 @@ Jobs which are scheduled to run at scheduled time. it will have `startDeadlineSe
 `successfulJobsHistoryLimit` keeps history of successful jobs : 3 default
 `failedJobsHistoryLimit` keeps history of failed jobs: 1 default
 
+
+# StatefulSet
+Sometimes we need to create the deployment in such a way then we want to remember pod names in order. For example in database HA setup. Here we know that for example
+for mysql. We can read from any replication node but can write to only one(master). This means that we need to remember which node is master. Pods dont have dns names and there ip addresses are dyanmic. Hence what could be the solution?
+StatefulSets are used to create pods in ordered fashion. It will create pods in order and one by one. mysql-0,mysql-1.... and will scale up and down in same manner too. You can also set pod creation to parallel if you want. `spec.podManagementPolicy` can be updated to `Parallel` from defaul `OrderedReady`.
+
+## Volumes
+In stateful sets, volumes are not managed as deployment. it is done differently.
+There is no separate PVC or PV creation. but PVC configuration is moved under `spec.volumeClaimTemplates` section. So pvc, pv creation is automatic for each pod. You can use the storage class to handle the volume creation and create volume for pods as each pod will have seprate pvc,pv and/or shared/dedicated volume deoending on storage class.
+
            
