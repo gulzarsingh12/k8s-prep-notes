@@ -26,3 +26,5 @@ job will run to completin. if job is failed, it will restart to retry and rerun.
 By default `completions` is set to 1 but if set to >1 then it will ensure the job is completed that many times. it will try to do completions sequentially one by one. 
 To try these completions parallely, `parallelism` can be set to try more than 1 completions. it is also set to 1 by default.
 
+The back-off limit is set by default to 6. Failed Pods associated with the Job are recreated by the Job controller with an exponential back-off delay (10s, 20s, 40s ...) capped at six minutes.
+
