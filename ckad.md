@@ -61,3 +61,69 @@ Below is th format of dns names of pod
 <pod-name>.<svc-name>.<namespace>.svc.cluster.local
 For example if serive name is `mysql-h` and pod name is `mysql` in default namespace then dns name of first pod will be `mysql-0.mysql-h.default.svc.cluster.local`. Still pod can be accessed via `mysql-h.default.svc.cluster.local` service dns name but chances depend on load balancer. 
 For example in case of mysql dbs here, for any read operation `mysql-h.default.svc.cluster.local` can be used but for write `mysql-0.mysql-h.default.svc.cluster.local` should be used only.
+
+# Admission Controller
+Sometime we need to add additional control or security messures before creating pods or any resources. This can be done after authentication and authorization. 
+
+client [kubectl] -> kube-apiserver [authentication -> authorization -> admission controller -> Create Pod]
+
+So for example, 
+- we want to ensure a user is always added to the pod created so that we know who created this pod.
+- we want to add some label to every pod creation
+- suppose we want to disable root for docker container at runtime.
+
+This can be acheieved with admission controllers.
+
+To check the enabled/diabled admission plugins
+````
+k exec -n kube-system -it kube-apiserver-controlplane -- kube-apiserver -h | grep enable-admission-plugins
+````
+
+To enable an admission controller set `--enable-admission-plugins=<admissions-ontroller>` in **kube-apiserver** manifest args
+To disable an admission controller set `--disable-admission-plugins=<admissions-ontroller>`
+
+## ValidatiingAdmissionController
+This is the admission controller which validates the coming admissionreview request with allowed=true/false. if allowed it will go to next admission controller.
+
+## MutatingAdmissionController
+Sometimes we want to update the coming pod request with something then mutating will add/change the pod configurartion. for example if we want to add the non root user to container pod request if nothing specified. 
+
+## Validate and Mutate
+An admission controller can do both validate and mutate. for example, if requeet is coming without user,  mutating controller will add it as non root user, then validating controller will validate this request for the user field if specified as valid value.
+
+Another example of validating is `NamespaceExists` and mutating is `NamespaceAutoprovision`. Please note that order of executiuon is always mutating and validating to ensure that request is updated already before validation otherwsie it will fail.
+
+`NamespaceAutoprovision` and `NamespaceExists` is deprecated and replaced with `NamespaceLifecycle`. it will also ensure that user can't recreate the `default, kube-system and kube-public` namespaces.
+
+## Configure admission webhook
+Sometime we need to hook our own code to validate or mutate. This can be done via 2 webhooks.i.e MutatingAdmissinWebhook, ValidatingAdmissinWebhook. We need to configure to add our webhook server. Our webhook server will need to implement **/mutate** and **/validate** api post methods.
+
+
+- To configure it,  we need to run our webhook server as systemd service or any other way externally or internally or as pod or deployment.
+- Then we need to apply below configuration to enable the webhook.
+````
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: "pod-policy.example.com"
+webhooks:
+- name: "pod-policy.example.com"
+  rules:
+  - apiGroups:   [""]
+    apiVersions: ["v1"]
+    operations:  ["CREATE"]
+    resources:   ["pods"]
+    scope:       "Namespaced"
+  clientConfig:
+    service:
+      namespace: "example-namespace"
+      name: "example-service"
+    caBundle: <CA_BUNDLE>
+  admissionReviewVersions: ["v1"]
+  sideEffects: None
+  timeoutSeconds: 5
+````
+
+Remember to set the caBundle. it is base64 encode ca.crt given by webhook server. You can openssl to generate certs for webshook server. which will have server.key,server.crt,ca.crt. Set the ca.crt as explained in above.
+
+If running it as deployment/pod in same cluster, then set the webhook-service to reach the pods. As in above example, name should be like example-service.example-namespace so it can call it using that or FQDN.
