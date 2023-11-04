@@ -18,3 +18,11 @@ then 4 new pods are created totalling 8 pods.
 
 ### Canary
 In this deployment, new changes are rolled with old one and tested to ensure it is working if working fine then new changes are deployed rolled out slowely to all pods.
+
+
+# Jobs 
+job will run to completin. if job is failed, it will restart to retry and rerun. it will retry till `backoffLimit` which is default to `6`. Sometimes it is possible to set `activeDeadlineSeconds` which will kill the job even if `backoffLimit` is avilable to retry few more time. Hence activeDeadline has precendence over backoffLimit.
+
+By default `completions` is set to 1 but if set to >1 then it will ensure the job is completed that many times. it will try to do completions sequentially one by one. 
+To try these completions parallely, `parallelism` can be set to try more than 1 completions. it is also set to 1 by default.
+
