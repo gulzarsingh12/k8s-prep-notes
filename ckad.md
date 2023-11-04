@@ -54,4 +54,10 @@ StatefulSets are used to create pods in ordered fashion. It will create pods in 
 In stateful sets, volumes are not managed as deployment. it is done differently.
 There is no separate PVC or PV creation. but PVC configuration is moved under `spec.volumeClaimTemplates` section. So pvc, pv creation is automatic for each pod. You can use the storage class to handle the volume creation and create volume for pods as each pod will have seprate pvc,pv and/or shared/dedicated volume deoending on storage class.
 
-           
+## Headless Service
+A service is created with `clusterIP: None`. This is called headless service. Purpose of this service is to create dns A records for pods. As we know that pods needs to have dns names here instead of ip based FQDN names. 
+Rememeber to set the `serviceName` property in StatefulSet's pod template. This is required to generate the unique dns names for each pod.
+Below is th format of dns names of pod
+<pod-name>.<svc-name>.<namespace>.svc.cluster.local
+For example if serive name is `mysql-h` and pod name is `mysql` in default namespace then dns name of first pod will be `mysql-0.mysql-h.default.svc.cluster.local`. Still pod can be accessed via `mysql-h.default.svc.cluster.local` service dns name but chances depend on load balancer. 
+For example in case of mysql dbs here, for any read operation `mysql-h.default.svc.cluster.local` can be used but for write `mysql-0.mysql-h.default.svc.cluster.local` should be used only.
