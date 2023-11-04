@@ -28,3 +28,20 @@ To try these completions parallely, `parallelism` can be set to try more than 1 
 
 The back-off limit is set by default to 6. Failed Pods associated with the Job are recreated by the Job controller with an exponential back-off delay (10s, 20s, 40s ...) capped at six minutes.
 
+## Cron Jobs
+Jobs which are scheduled to run at scheduled time. it will have `startDeadlineSeconds`, which means if the job is not started within this time after missing the schedule then it will skipped.
+
+`schedule` is defined as below
+- `* * * * *`  starts every min
+- `0 * * * *`  starts every hour
+- `0 0 * * *`  start midnight every day
+-  `0 0 1 * *` start every month 1st day at midnight
+-  `0 0 1 1 *` start every year 1st day of 1st month at midnight
+-  `0 0  * * 0` start every week on first day of week at midnight
+
+*/2 for mins means every other min, */5 for mins means every 5th mins.
+
+`successfulJobsHistoryLimit` keeps history of successful jobs : 3 default
+`failedJobsHistoryLimit` keeps history of failed jobs: 1 default
+
+           
