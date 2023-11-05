@@ -1,3 +1,9 @@
+# Systemd
+
+## to check init system
+`ps -p 1`
+output contains  systemd if init system is systemd.
+
 # for loop
 
 ## iterate over range 1... 10
