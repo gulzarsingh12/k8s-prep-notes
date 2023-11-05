@@ -141,4 +141,6 @@ To test a particular feature/version add `--runtime-config=batch/v2alpha1` to ku
 A version deprecated in a release must be supported for
 - **GA**   : 12 months or 3 releases (whichever is longer)
 - **beta** : 9 months or 3 releases (whichever is longer)
-- **alpha**: 0 releases 
+- **alpha**: 0 releases
+
+use `kubectl-convert -f old.yaml --output-version v1` to migrate exiting version to new version.
