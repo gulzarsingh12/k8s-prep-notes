@@ -13,11 +13,21 @@ pod is up then 2 is termibated and recreated.
 This will ensure no application downtime hence default deployment strategy.
 
 ### Blue Green
-In this strategy, new version version is deployed and tested. if working, then old deployment is terminated. So in this case, if 4 pods are deployed 
-then 4 new pods are created totalling 8 pods. 
+In this strategy, new version version is deployed called Green. Existing deployment is called Blue. So in this case, if 4 pods are deployed then 4 new pods are created totalling 8 pods. both versions are running. New deployment is run and tests are performed. In this time existing version is stil running and serving. Once test and passed, user traffic is switched to new(green) deployment and blue(existing) deployment is terminated. e.g. istio.
+
+How it works?
+We have deployment with pods in blue and a service pointing to it. Say it is labeled as v1. Once tested v2(green), service will change the label to v2 to switch traffic.
+
 
 ### Canary
-In this deployment, new changes are rolled with old one and tested to ensure it is working if working fine then new changes are deployed rolled out slowely to all pods.
+In this deployment, new changed are rolled partially/slowley in a small percentage. Once tested, new changes are termnated and existing deployment is upgraded using k8s RollingUpdate stragy.
+We need to acheive 2 things here.
+
+#### Route traffic to existing deployment and canary deployment.
+We can achieve routing traffic to both deployments using common label. Say service has selector as app=front-end and both deployment will have this label plus their version labels like v1 and v2.
+
+#### Route small traffic to canary deployment.
+We can achieve this by only running pods in % to existing deployment to achieve this. If we want to route 20% traffic to canary then we need to ensure 4 pods are running in existing deployment and 1 pod is running in new(canary) deployment. This way load balancer will send equal traffic to all pods. Its not possible to send % of traffic to a pod from k8s. it will send equal traffic to all pods.
 
 
 # Jobs 
