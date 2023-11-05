@@ -260,9 +260,9 @@ It will contain the values for the placeholder.
 It will contain the information about application. Its like a metadata file containing details like version, description etc.
 
 ## Commands
-- To search wordpress `helm search hub wordpress`
+- To search wordpress from artifact hub `helm search hub wordpress`
+- To search wordpress in added repo `helm search repo wordpress`
 - To add a repo `helm repo add bitnami https://charts.bitnami.com/bitnami`
-- To search in the repo `helm search repo wordpress`
 - To list repo `helm repo list`
 - to install `helm install <release-name> <chart-name>`
 - to install the application multiple times
