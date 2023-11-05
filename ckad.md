@@ -21,8 +21,9 @@ We have deployment with pods in blue and a service pointing to it. Say it is lab
 
 ### Canary
 In this deployment, new changed are rolled partially/slowley in a small percentage. Once tested, new changes are termnated and existing deployment is upgraded using k8s RollingUpdate stragy.
-We need to acheive 2 things here.
 
+
+We need to acheive 2 things here.
 #### Route traffic to existing deployment and canary deployment.
 We can achieve routing traffic to both deployments using common label. Say service has selector as app=front-end and both deployment will have this label plus their version labels like v1 and v2.
 
