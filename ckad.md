@@ -127,3 +127,18 @@ webhooks:
 Remember to set the caBundle. it is base64 encode ca.crt given by webhook server. You can openssl to generate certs for webshook server. which will have server.key,server.crt,ca.crt. Set the ca.crt as explained in above.
 
 If running it as deployment/pod in same cluster, then set the webhook-service to reach the pods. As in above example, name should be like example-service.example-namespace so it can call it using that or FQDN.
+
+# Api Versions
+`k explain deployment` command to check version and other details of deployment resource.
+
+there are 2 versions
+- `preferred` version is recommended version which k8s want you to use. this contain latest features to use etc.
+- `storage` version is the version in which data in stored in etcd. It can be same as preferred or different too. this is internal version in which k8s stores data in etcd.
+
+To test a particular feature/version add `--runtime-config=batch/v2alpha1` to kube-apiserver args
+
+## Deprecation
+A version deprecated in a release must be supported for
+- **GA**   : 12 months or 3 releases (whichever is longer)
+- **beta** : 9 months or 3 releases (whichever is longer)
+- **alpha**: 0 releases 
