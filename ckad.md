@@ -149,6 +149,11 @@ use `kubectl-convert -f old.yaml --output-version v1` to migrate exiting version
 # Custom Resources
 Sometime we need to create to extend k8s and add our own resource apart from given k8s resources.i.e pods,deployments,services,ReplicaSets etc.
 
+There are 3 things required to run a custom resource
+ 1. Custom Resource Definition (CRD) -  To define config for the custom resource.
+ 2. Custom Resource - To monitor the custom resource, take use inputs etc.
+ 3. Custom Controller - To run the code/server to listen for custom resources and apply the required changes.
+
 ## CRD (CustomResourceDefinition)
 - Create a CRD yaml file to create crd configuration
   ````
@@ -196,7 +201,7 @@ Sometime we need to create to extend k8s and add our own resource apart from giv
 - `k apply -f <crdfile>`
 
 ## CustomResource
-- create resource like below
+- Create resource like below
   ````
   apiVersion: "stable.example.com/v1"
   kind: CronTab
@@ -208,4 +213,18 @@ Sometime we need to create to extend k8s and add our own resource apart from giv
   ````
 - Access this resource `k get ct` or `k get crontabs`
 
+## Custom Controller
+Once the Custom Resource is created, Custom controller comes into action. it will listen for changes in etcd via kube-apiserver for the custom resource. it will apply the changes to achieve desired state as per custom resurce.
 
+# Operator Framework
+If you see above, we created the CRD, CR and CustomController etc. All these steps can be done together in much more abstract way, at least CRD and Controller part.
+Operator is like a manual human being working as operator and doing operations work. For example, crearting CRD and Controller, deploying resource, upgrading resource, taking backup, restoring the backup from etcd etc.
+To handle all these tasks, operator framework is used.
+
+Some of the things that you can use an operator to automate include:
+- deploying an application on demand
+- taking and restoring backups of that application's state
+- handling upgrades of the application code alongside related changes such as database schemas or extra configuration settings
+- publishing a Service to applications that don't support Kubernetes APIs to discover them
+- simulating failure in all or part of your cluster to test its resilience
+- choosing a leader for a distributed application without an internal member election process
