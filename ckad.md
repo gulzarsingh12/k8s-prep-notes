@@ -239,3 +239,39 @@ Some of the things that you can use an operator to automate include:
 - publishing a Service to applications that don't support Kubernetes APIs to discover them
 - simulating failure in all or part of your cluster to test its resilience
 - choosing a leader for a distributed application without an internal member election process
+
+# Helm
+It is tedious task to maintain the multiple yaml files each for deploymet, service, pvcs etc. then manage the releases of those files. Also sometime if a value need to be custom configured during deployment then these files needs to change and maintain. These kind of problems can be solved with helm. 
+Also you dont have to install, upgrade, rollback separately. it will help to mange those.
+Custom value are provided using values.yaml with `{{.Values.storage}}` in yaml file. It will be defined as `storage` in yaml file.
+
+Helm charts/packages can searched from http://artifacthub.io
+
+## Structure
+it has 3 typed of files:
+
+### Templates/
+It will contain the user deployment related yaml files.
+
+### values.yaml
+It will contain the values for the placeholder.
+
+## Chart.yaml
+It will contain the information about application. Its like a metadata file containing details like version, description etc.
+
+## Commands
+- To search wordpress `helm search hub wordpress`
+- To add a repo `helm repo add bitnami https://charts.bitnami.com/bitnami`
+- To search in the repo `helm search repo wordpress`
+- To list repo `helm repo list`
+- to install `helm install <release-name> <chart-name>`
+- to install the application multiple times
+  ````
+  helm install release1 bitnami/wordpress
+  helm install release2 bitnami/wordpress
+  helm install release3 bitnami/wordpress
+  ````
+- to list installed release `helm list`
+- to unsintall `helm uninstall release1`
+- To only download the helm charts without installing `helm pull --untar bitnami/wordpress`
+- so if need to change above downloaded package, after changes install from local folder as `helm install release4 ./wordpress`
