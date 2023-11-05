@@ -250,13 +250,13 @@ Helm charts/packages can searched from http://artifacthub.io
 ## Structure
 it has 3 typed of files:
 
-#### Templates/
+#### templates/
 It will contain the user deployment related yaml files.
 
 #### values.yaml
 It will contain the values for the placeholder.
 
-#### Chart.yaml
+#### chart.yaml
 It will contain the information about application. Its like a metadata file containing details like version, description etc.
 
 ## Commands
