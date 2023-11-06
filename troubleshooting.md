@@ -30,6 +30,8 @@
    check config file path and entries in file.
    check configured service inside `/etc/systemd/system`
 - check logs using `journalctl -u kubelet.service`
+  To tail 10 lines of log `journalctl -u kubelet -n 10`
+  To continue logs, pass `-f`
 
 # Worker Node
 - Check node status `k get nodes` if not ready try describe to see the issue
