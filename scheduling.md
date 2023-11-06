@@ -51,6 +51,14 @@ https://controlplane:6443/api/v1/namespaces/default/pods/nginx/binding/
   ````
   k get po -l env=prod,bu=finance,tier=frontend
   ````
+- To create a pod with label
+  ````
+  k run nginx --image=nginx -l=app=frontend
+  ````
+- To show labels on pods or nodes etc
+  ````
+  k get po --show-labels
+  ````
   
 # Taints & tolerations
 Taint is defined on noded and tolerations on pod to allow nodes the pods with tolerations.
