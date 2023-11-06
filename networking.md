@@ -50,6 +50,8 @@ netstat -plnt
 `wget https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml`
 `k apply -f kube-flannel.yml`
 
+if doesnt work try adding interface to yml. `--iface=eth0`
+
 #### Calico
 `wget https://raw.githubusercontent.com/projectcalico/calico/v3.26.3/manifests/calico.yaml`
 `k apply -f calico.yaml`
