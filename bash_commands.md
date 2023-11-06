@@ -24,3 +24,12 @@ prints `hello world 1 10` in each line
 
 ### if else if
 `type="color" && if [ "$type" == "color" ]; then echo orange; elif [ "$type" == "hero" ]; then echo spiderman; else echo type not known; fi`
+
+
+# Install K8s
+- Follow k8s documentation
+- Install prerequisites
+- Follow install kubeadm on k8s docmentation
+- Create cluster. add advertise ip, extra sansm, pod cidr based on network plugin
+- add pod network, check urls . ensure interface name set for flannel in kube-flannel.yml
+- check nodes status
