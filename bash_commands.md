@@ -1,3 +1,6 @@
+# General
+- To apend logs to a file. this will append instead of overriding `k logs pod >>pod_error.log`
+
 # Systemd
 
 ## to check init system
