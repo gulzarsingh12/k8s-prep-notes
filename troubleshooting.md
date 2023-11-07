@@ -23,6 +23,15 @@
 # Control Plane Failure
 - Check node status `k get nodes` if not ready try describe to see the issue
 - Check pods running `k get po` if not running try describe to see the issue
+- Follow below sequence to find the issue with controlplane
+   1. Check `k logs <pod>`, this can work for other than apiserver pods created by kubeadm. So first thing is to check if pods are created or started as service. if service then check `journalctl` otherwise `k logs`. Hence this step wont work for `kube-apiserver` if using kubeadm setup.
+   2. Try checking logs `crictl ps -a` and find the container id for `kube-apiserver`. Check logs at `/var/log/pods` or `/var/log/containers`.
+   3. Somnetimes problem in manifest or something else wrong. Try checking the kubelet logs. `/var/log/syslog` or `journalctl`
+      ````
+      tail -f /var/log/syslog | grep apiserver
+      or  journalctl | grep apiserver
+      ````
+
 
 ### Running as Pod (kubeadm)
 - check if control plane components running. `k get po -n kube-system`
