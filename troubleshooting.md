@@ -1,3 +1,7 @@
+# Logs
+- Logs path can `/var/log/pods` or `/var/log/containers`
+- Logs for kubelet `/var/log/syslog` or `journalctl`
+
 # Commands
 - to get cluster info `k cluster-info`
 - to know component status `k get componentstatues`
