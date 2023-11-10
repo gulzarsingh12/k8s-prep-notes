@@ -1,3 +1,13 @@
+# K8s commands to remember before exam
+- To check the iptables entry in kube-proxy if exists `iptables -L -t nat | grep db-service`
+- check logs or configmap to check kube-proxy for firewall rules using which iptables, ipvs etc
+- service cidr is in kube-apiserver args `--service-cluster-ip-range` and controller manager
+- pod cidr in `--pod-network-cidr` in kubeadm init 
+
+# Vi Commands
+- y to copy, p to paste, d to delete
+- v to mark, arrow to select and move up down, > to ident right, < to ident left, . to continue
+
 # General
 - To apend logs to a file. this will append instead of overriding `k logs pod >>pod_error.log`
 
