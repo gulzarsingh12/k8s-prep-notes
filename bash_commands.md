@@ -12,6 +12,7 @@
 - If `kubeadm join` fails, then call `kubeadm reset`
 - To get a sh terminal for testing. This will give you a terminal to run commands. `k run tmp -i -t --rm=true --restart=Never --image=busybox -- sh`
 - To run a command for testing. Note the removed `-t` from above command. `k run tmp -i --rm=true --restart=Never --image=busybox -- curl -m 2 svc:port`
+- Another way to find the node of the running pod. `k get po -o wide` or `k get po pod1 -o yaml | grep nodeName`
 
   
 # Vi Commands
