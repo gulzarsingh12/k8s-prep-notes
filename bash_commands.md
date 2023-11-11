@@ -4,10 +4,11 @@
 - service cidr is in kube-apiserver and controller manager args `--service-cluster-ip-range`
 - pod cidr in `--pod-network-cidr` in kubeadm init.
 - To fetch a page in busybox `wget -O (filename|-) [url]`  - means stdout e.g. `wget -O- https://stackoverflow.com` to write the file to std output. Or `wget -O index.html https://stackoverflow.com` or `wget https://stackoverflow.com` also download the index.html at current path. To set timeout `wget -T 2 -O- https://stackoverflow.com` will downloadand print output to stdout with timeout 2 secs.
-- To fetch a page using curl. nginx has curl but busybox has wget. `curl https://stackoverflow.com` or `curl -o index.html https://stackoverflow.com`. To get curl output silent `curl -s <ip:port>`
+- To fetch a page using curl. nginx has curl but busybox has wget. `curl https://stackoverflow.com` or `curl -m 2 -o index.html https://stackoverflow.com`  `-m` for max time. To get curl output silent `curl -s <ip:port>`
 - To check if user or sa has permission `k auth can-i create secret --as system:serviceaccount:ns:sa` . note that sa is checked using `system:serviceaccount:_:_` _:_ is namespace:serviceaccountname
 - To ssh into node and run command to get the output back on same node. `ssh node1 'crictl logs e3e2fr4' &>/data/c1.log` this will write the node on node doing the ssh.
 - To verify the env var `k exec secret-pod -- env | grep APP`
+- To verify the secrets `k exec secret-pod -- find /tmp/secret2`
 - If `kubeadm join` fails, then call `kubeadm reset`
 
   
