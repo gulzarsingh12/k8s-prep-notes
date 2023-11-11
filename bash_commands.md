@@ -9,6 +9,34 @@
 # Vi Commands
 - y to copy, p to paste, d to delete
 - v to mark, arrow to select and move up down, > to ident right, < to ident left, . to continue
+- to go to top of the file `gg`, to end of file `shift + g`
+- To search `/hello` and then `n` for next occurence or enter to stop and search backward `?hello`
+- To search and replace all occurence `:%s/hello/hola/g` to replace
+- To search and replace first occurence in current line `:s/hello/hola/` to replace . `%` mean all line in file to search and `g` means all occuerence to replace in current (`s`) line or all lines (`%s`)
+- to delete all occurences in file `%s/hello//g`
+- vi ~/.vimrc
+  ````
+  set et
+  set ts=2
+  set sw=2
+  set sts=2
+  ````
+- vi ~/.bashrc
+  ````
+  alias kc="k create -f"
+  alias ka="k apply -f"
+  alias kr="k replace -f"
+  alias kd="k describe"
+  alias kgp="k get po"
+  alias kga="k get all"
+  alias kdp="k delete po"
+  alias kg="k get"
+  alias kgn="k get nodes"
+  alias kgs="k get componentstatuses"
+  export do="--dry-run=client -o yaml"
+  export now="--force --grace-period=0"
+  nk="-n kube-system"
+  ````
 
 # General
 - To apend logs to a file. this will append instead of overriding `k logs pod >>pod_error.log`
