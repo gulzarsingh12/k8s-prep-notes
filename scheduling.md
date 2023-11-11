@@ -179,6 +179,17 @@ As cluster is shared between different teams because nodes are deployed with the
 
 However, there is still a problem exists in the namespace level. What if some container/pods take all the namespace level resources? This can be solved by setting the limits at container level. `LimitRange` is used to set the default, defaultRequest, min, max etc at container level.
 
+## Pod termination
+When a node is low on resources and need to terminate a resource then it will work as below:
+
+It will check the pods using more cpu and memory then the requested (`requests:`) resources. it will terminate those pods. For example there are 3 pods with cpu requests 2m, 1m and not defined (this is like 0m). K8s will terminate the pod with cpu 0m as this is resource using more cpu the requested (0m, not defined). Hence its always good to define the requests for cpu and memory.
+
+There are 2 ways to check the from kubectl
+- Check the pods with least cpu or memory. `k get pods -o=jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.containers[*].resources}{"\n"}{end}'`
+- Check the QosClass (QualityOfService) . It can be like BestEffort, Burstable
+  `k get pods -o=jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.qosClass}{"\n"}{end}'`
+  Hence BestEffort will be terminated first 
+
 # DaemonSets
 Daemonsets are like replicaSet but but instead of ensuring no of replicas, it will ensure 1 pod on each node. We can try to create rs using imperative command then replace kind with DeamonSet
 
