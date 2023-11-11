@@ -14,6 +14,7 @@
 - To search and replace all occurence `:%s/hello/hola/g` to replace
 - To search and replace first occurence in current line `:s/hello/hola/` to replace . `%` mean all line in file to search and `g` means all occuerence to replace in current (`s`) line or all lines (`%s`)
 - to delete all occurences in file `%s/hello//g`
+- To turn on/off line number `:set number` or `:set nonumber`. to go to line 22 `:22`
 - vi ~/.vimrc
   ````
   set et
