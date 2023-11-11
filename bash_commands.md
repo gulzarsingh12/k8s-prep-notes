@@ -5,6 +5,7 @@
 - pod cidr in `--pod-network-cidr` in kubeadm init.
 - To fetch a page in busybox `wget -O (filename|-) [url]`  - means stdout e.g. `wget -O- https://stackoverflow.com` to write the file to std output. Or `wget -O index.html https://stackoverflow.com` or `wget https://stackoverflow.com` also download the index.html at current path. To set timeout `wget -T 2 -O- https://stackoverflow.com` will downloadand print output to stdout with timeout 2 secs.
 - To fetch a page using curl. nginx has curl but busybox has wget. `curl https://stackoverflow.com` or `curl -o index.html https://stackoverflow.com`
+- To check if user or sa has permission `k auth can-i create secret --as system:serviceaccount:ns:sa` . note that sa is checked using `system:serviceaccount:_:_` _:_ is namespace:serviceaccountname
 
 # Vi Commands
 - y to copy, p to paste, d to delete
