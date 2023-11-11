@@ -39,6 +39,7 @@
   export do="--dry-run=client -o yaml"
   export now="--force --grace-period=0"
   nk="-n kube-system"
+  alias kn="k config set-context --current --namespace"
   ````
 
 # General
