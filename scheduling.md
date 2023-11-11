@@ -88,8 +88,8 @@ Taint is defined on noded and tolerations on pod to allow nodes the pods with to
 - `NoExecute` means no pods allowed without tolerations. if a pod is running without toleration then it will be evicted.
 - `PreferNoSchedule` is a "preference" or "soft" version of NoSchedule. The control plane will try to avoid placing a Pod that does not tolerate the taint on the node, but it is not guaranteed.
 
-
-# NodeAffinity
+# Affinity
+## NodeAffinity
 similar to nodeselector but this is more pwerful because it provides filter 
 ````
 affinity:
@@ -103,6 +103,72 @@ affinity:
             - ssd  
 ````
 so it wil place the pod on node with disktype in ssd.
+
+## PodAffinity
+It is interpod affinity and tell to schedule pods on same node which has existing pods running. It means for below to run pod on the node having `topologyKey` specified label with existing pod having label `app=store`.
+````
+affinity:
+  podAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+             - store
+        topologyKey: "kubernetes.io/hostname"
+````
+## PodAntiAffinity
+It is the opposite of the pod affinity. It will schedule the pod on the node which doesn't have the pod already with matching label already. Again it is also applicable to node with label as toplogyKey.
+This is useful when we need to colocate the pods on the nodes. This is good example for apps using caching to avoid the hit/latency going to different pod..i.e. redis cache.. e.g. zookeeper link in k8s documentation.
+````
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
+        matchExpressions:
+        - key: app
+          operator: In
+          values:
+          - store
+      topologyKey: "kubernetes.io/hostname"
+````
+
+### pod affinity and anti affinity together
+It will be useful to create a set with only 1 webserver (anti) located with redis cache (at least 1 to colocate)
+````
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
+        matchExpressions:
+        - key: app
+          operator: In
+          values:
+          - web-store
+      topologyKey: "kubernetes.io/hostname"
+  podAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
+        matchExpressions:
+        - key: app
+          operator: In
+          values:
+          - store
+      topologyKey: "kubernetes.io/hostname"
+````
+
+# ToplogySpreadConstraint
+This is to schedule pods with equal replicas on each node. for example if there are 20 replicas and 4 nodes. it will ensure 5 pods on each node. Based on the label it will count the no of pods to check the imbalance (maxSkew).
+````
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: zone
+    whenUnsatisfiable: DoNotSchedule
+    labelSelector:
+      matchLabels:
+        foo: bar
+````
 
 # Resource Requirements
 - there are 2 type of resource request limits
