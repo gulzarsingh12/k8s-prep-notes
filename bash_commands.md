@@ -8,6 +8,7 @@
 - To check if user or sa has permission `k auth can-i create secret --as system:serviceaccount:ns:sa` . note that sa is checked using `system:serviceaccount:_:_` _:_ is namespace:serviceaccountname
 - To ssh into node and run command to get the output back on same node. `ssh node1 'crictl logs e3e2fr4' &>/data/c1.log` this will write the node on node doing the ssh.
 - To verify the env var `k exec secret-pod -- env | grep APP`
+- If `kubeadm join` fails, then call `kubeadm reset`
 
   
 # Vi Commands
