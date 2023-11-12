@@ -22,7 +22,7 @@ can be added at container security context. Also container security context has 
 - serviceAccount is under pods spec not containers
 - G is gigabyte 1000 and Gi is gibibyte 1024 same for Mi
 - Resources -> Cpu - Idle scenario is when requests is set under resource but no limits because then other pods when in need can take more cpu.
-- 
+
 Memory: memory can’t be throttled so pod will crash and restarted.
 
 ResourceLimit, ResourceQuota
