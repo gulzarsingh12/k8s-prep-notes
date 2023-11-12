@@ -48,6 +48,8 @@
   export now="--force --grace-period=0"
   nk="-n kube-system"
   alias kn="k config set-context --current --namespace"
+  alias knginx="k run tmpnginx -i --rm=true --restart=Never --image=nginx:alpine"
+  alias kbusybox="k run tmpbusybox -i --rm=true --restart=Never --image=busybox"
   ````
 
 # General
