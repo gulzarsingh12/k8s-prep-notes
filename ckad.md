@@ -1,17 +1,17 @@
-# Notes
+# CKAD Notes
  - “k run” is used for pod creation.
  - “k expose” is used for service creation.
  - “k run –expose=true” can be used for pod creation along with service creation
  - “k run – arg=value” to pass command args 
  - “k replace –force -f <file> can be used when editing pod. This will delete pod too.
 
-## Secrets
+### Secrets
  The way kubernetes handles secrets. Such as:
   - A secret is only sent to a node if a pod on that node requires it.
   - Kubelet stores the secret into a tmpfs so that the secret is not written to disk storage.
   - Once the Pod that depends on the secret is deleted, kubelet will delete its local copy of the secret data as well.
 
-## Security Context
+### Security Context
 securityContext can be at podLevel but add capabilities can only be at container level. So
 
     capabilities:
