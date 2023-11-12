@@ -8,34 +8,43 @@
 ## Secrets
  The way kubernetes handles secrets. Such as:
   - A secret is only sent to a node if a pod on that node requires it.
-	- Kubelet stores the secret into a tmpfs so that the secret is not written to disk storage.
+  - Kubelet stores the secret into a tmpfs so that the secret is not written to disk storage.
   - Once the Pod that depends on the secret is deleted, kubelet will delete its local copy of the secret data as well.
 
 ## Security Context
 securityContext can be at podLevel but add capabilities can only be at container level. So
+
     capabilities:
       add:  [SYS_TIME]
+      
 can be added at container security context. Also container security context has higher precedence than pod.
-	- ServiceAccountAdmissionController  (use token request api)
-	- serviceAccount is under pods spec not containers
-	- G is gigabyte 1000 and Gi is gibibyte 1024 same for Mi
-	- Resources -> Cpu - Idle scenario is when requests is set under resource but no limits because then other pods when in need can take more cpu.
+- ServiceAccountAdmissionController  (use token request api)
+- serviceAccount is under pods spec not containers
+- G is gigabyte 1000 and Gi is gibibyte 1024 same for Mi
+- Resources -> Cpu - Idle scenario is when requests is set under resource but no limits because then other pods when in need can take more cpu.
+- 
 Memory: memory can’t be throttled so pod will crash and restarted.
+
 ResourceLimit, ResourceQuota
 	- Nodeafinity , tolerations
+ 
 kubectl taint nodes node1 key1=value1:NoSchedule
+
 To untaint, just add – in the end
+
 kubectl taint nodes node1 key1=value1:NoSchedule-
+
 for pod, add tolerations under spec.
 	- K label nodes node01 key=value
+ 
 K get nodes –-show-labels
-	- “k exec -it <pod_name> -- whoami” to run any command in container
-	- initContainers which complete in sequential order. 
-	- readinessProbe and livenessProbe
-	- annotations are for information like build version etc
-	- “k set image deployment/myapp container-name=image:version”
-	- “k rollout status”, “k rollout history” , --record, --to-revision
-	- K jobs, cronjobs
+- “k exec -it <pod_name> -- whoami” to run any command in container
+- initContainers which complete in sequential order. 
+- readinessProbe and livenessProbe
+- annotations are for information like build version etc
+- “k set image deployment/myapp container-name=image:version”
+- “k rollout status”, “k rollout history” , --record, --to-revision
+- K jobs, cronjobs
 
 # Deployment
 
