@@ -377,3 +377,31 @@ to replace at specific rule number `iptables -R OUTPUT 3 -p tcp -d 172.16.238.19
 * `-l` can be used to show listening sockets only.
 * `-t` to list tcp sockets only.
 
+
+# Cron Jobs
+
+To run some scripts as job. This can be done using `crond` service
+
+* `crontab -e` to add a schedule
+* `crontable -l` to list the currently setp job schedules
+* To verify when the job is run, you can check some application file produced. e.g. if job has `uptime >>job_time.txt` then check this file `cat job_time.txt` to see the time of job run.
+* Another way is to check the system logs. `tail /var/log/syslog`. it will list the specific command run
+
+## cron expression
+
+below entry in `crontab -e`
+
+`m  h   dom  mon  dow  command`
+ 
+`0  21  *    *    *    uptime >> job_time.txt`
+
+This will run every day at 9PM.
+
+### examples
+* `10 8 19 2 1` means run on 8:10AM, 19th February, Monday
+* `10 8 19 * *` means run on 8:10AM, 19th of every month
+* `10 8 *  * *` means run on 8:10AM, every day
+* `10 * *  * *` means run on every 10th min of every hour (once in an hour), every day
+* `*  * *  * *` means run on every min of every hour, every day
+* `*/10 * * * *` means run on every 10 min in every hour (6 times in a hours), every day
+* `*/2 */2 * * *` means run on every other min of every other hour, every day. e.g 8:02,8:04,8:06....10:02,10:04,10:06....12:02,12:04 etc
