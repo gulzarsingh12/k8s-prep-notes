@@ -300,3 +300,80 @@ If ssh is setup and user can be connected. then scp should work for any file tra
 * `scp /home/bob/code.tar.gz devapp1:/home/bob` this will copy the file on remove server at given path if have permission
 * `scp -pr /home/bob/media/ devapp1:/home/bob` to copy the directory. -p to prereserve the ownership and file permissions.
 
+
+# IPTABLE
+
+iptables is like a windows firewall where incoming and outgoing connection are defined to ensure only allow client is able to connect to the server. For e.g. In an application where application and db server are defined as devapp1 and db1. db1 should only needs to be access by devapp1 hence if someone tries to connect to db server other than devapp1 then it should not be allowed. So we can define 3 rules here:
+* an incoming rule on db server to accept connections from app server
+* an outgoing rule from app server to db server
+* an incoming rule on app server to connection from client
+
+There are 3 types of the rule defined in iptables:
+* INPUT (incoming)
+* OUTPUT (outgoing)
+* FORWARD (not frequently used on linux server unless it is a router which can forward the traffic to next hop.
+
+Rules will be evaluated sequentially, if there are multiple rules in table, they are evalaualted sequentially. if at any point in sequence a rule is matched then action is taken otherwise move to next rule. if no rule matched then default rule is allow all.
+
+## command syntax
+
+if this utility is not instlled on the linux system then it can be installed using `sudo apt install iptables`
+
+`iptables -L` will list the current defined rules. if empty, no rule is defined then default is allow all incoming and outgoing traffic.
+
+|Option|Desc|
+|-|-|
+-A, -D, -I, -R|Append, Delete, Insert, Replace
+INPUT,OUTPUT,FORWARD|incoming, outgoing, forward
+-p|Protocol.e.g. tcp
+-s| source
+-d|destination
+--dport|destination port
+-j|Action to take.e.g. ACCPET, DROP
+
+
+`iptables -A INPUT -p tcp -s 172.16.238.187 --dport 22 -j ACCEPT` it will accpet the incoming connection from `172.16.238.187` on port 22 (which is ssh)
+
+Now only this is the only entry in table, then it means it will accept incoming connection from this host but it doesn't any drop rules. so if there is another connection from any host then it will still accept as default rule is to allow all.
+
+To fix that add another rule as `iptables -A INPUT -p tcp --dport 22 -j DROP`. This will only accpet the traffic from host defined above on port 22 but drop packets from any other host.
+
+Now you see 2 entries for incoming
+- accept ssh connection from host ip added above
+- drop ssh connections from any host
+
+Suppose app server needs to define the outgoing connection to db server on port 5432 now, it will do  `iptables -A OUTPUT -p tcp -d 172.16.238.188 --dport 5432 -j ACCEPT`
+But it will not stop outgoing connections to internet. we can block that by 
+````
+iptables -A OUTPUT -p tcp --dport 80 -j DROP
+iptables -A OUTPUT -p tcp --dport 443 -j DROP
+````
+
+What if we still want to allow connectiob to host git-repo1 on port 80. we can add another before the drop rule to match it before drop rule.
+`iptables -I OUTPUT -p tcp -d 172.16.238.189 --dport 443 -j ACCEPT`
+if you need that `-I` insert is used instead of `-A` append. because append will add in then end. but insert will add at the top.
+
+Note that to make it more secure we should drop all the incoming connections on all ports other thsn configured above. Same for outgoing too.
+
+### Delete
+To delete the rule `iptables -D OUTPUT 5`  
+* `-D` to delete
+* `OUTPUT` an outgoing rule
+* `5` rule no 5 in the table. numbering starts from 1.
+
+### Insert
+to insert at specific rule number `iptables -I OUTPUT 3 -p tcp -d 172.16.238.190 --dport 80 -j ACCEPT`
+
+Note the rule num after chain (OUTPUT)
+
+### Replace
+to replace at specific rule number `iptables -R OUTPUT 3 -p tcp -d 172.16.238.190 --dport 80 -j ACCEPT`
+
+
+## To check open ports
+* `netstat -an | grep 5432` it will show the connection from app server on db server.
+ `-n` to show numeric address like ip not dns name. it will show port no too.e.g. 127.0.0.1:5432 or 0.0.0.0:5432
+* `-p` can be used to show the pid of the process
+* `-l` can be used to show listening sockets only.
+* `-t` to list tcp sockets only.
+
