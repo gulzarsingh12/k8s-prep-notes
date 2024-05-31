@@ -286,8 +286,17 @@ You need to setup ssh with RSA private/public key. Once configured, no password 
 * above step will generate private and public key. e.g. `/home/bob/.ssh/id_rsa (private key)` and `/home/bob/.ssh/id_rsa.pub (public key)`
 * copy the public key to the server.
 * `ssh-copy bob@devapp1` will copy the public key to the remote server
+* it will add the public key of the user in remote server at `/home/bob/.ssh/authorized_keys`.
 * try now `ssh devapp1` will login without password.
 
 As per chatgpt's search, if i login with ssh key then I am not asked for password when using sudo command unless explicitly enabled in `/etc/sudoers` under `%sudo`group entry.
 
-But remember that user should be added to sudo group in /etc/passwd.
+But remember that user should be added if not already to sudo group in /etc/group using command `usermod -aG developer bob`. `-a` means to add this user to this group without removing from any other groups added already.
+
+
+## SCP
+If ssh is setup and user can be connected. then scp should work for any file transer.
+
+* `scp /home/bob/code.tar.gz devapp1:/home/bob` this will copy the file on remove server at given path if have permission
+* `scp -pr /home/bob/media/ devapp1:/home/bob` to copy the directory. -p to prereserve the ownership and file permissions.
+
