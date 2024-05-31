@@ -269,3 +269,25 @@ To change the owner of the file
 * `chown bob:developer test.txt` will change the owner and group of the file to bob and developer.
 * `chown bob test.txt` change only the owner of the file to bob
 * `chgrp developer test.txt` change only the group of the file to developer
+
+# Remote Access
+
+## SSH
+Port for ssh is `22`
+
+* `ssh host/ip` will ask for the password for logged in user
+* `ssh user@host/ip` will ask for password of user.
+* `ssh -l user host/ip`
+
+### no password
+You need to setup ssh with RSA private/public key. Once configured, no password needed for login
+
+* `ssh-keygen -t rsa` you can skip password prompt otherwise it will ask every time you run any command on host to remote once connect to ssh
+* above step will generate private and public key. e.g. `/home/bob/.ssh/id_rsa (private key)` and `/home/bob/.ssh/id_rsa.pub (public key)`
+* copy the public key to the server.
+* `ssh-copy bob@devapp1` will copy the public key to the remote server
+* try now `ssh devapp1` will login without password.
+
+As per chatgpt's search, if i login with ssh key then I am not asked for password when using sudo command unless explicitly enabled in `/etc/sudoers` under `%sudo`group entry.
+
+But remember that user should be added to sudo group in /etc/passwd.
