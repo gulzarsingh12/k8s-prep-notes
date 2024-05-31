@@ -190,3 +190,82 @@ To change the own password `passwd`
 
 ### groupdel
 to delete group `groupdel developer`
+
+## Files permissions
+
+first char in `ls -l` is file type.
+
+### File types
+* `d` directory
+* `-` regular file
+* `b` block device
+* `c` character device
+* `s` socket
+* `l` symlink
+* `p` pipe
+
+### permission types
+
+Permissions can be given to
+* `u` owner/user permissions
+* `g` group permissions
+* `o` other users/group which is not the owner/group.
+
+#### types
+
+`-rwx rwx rwx`
+
+`   u   g   o `
+
+##### file/dir permissions
+
+| Bit | Purpose | Octal Value |
+| --  | ------- | ----------- |
+r|Read|4
+w|Write|2
+x|Execute|1
+-|No Permission|0
+
+Suppose a dir have following permissions 
+
+`ls -ld /home/bob/random_dir`
+
+`d--xrwxrwx 1 bob bob 89  `
+
+if u see above, read and write is no permission and but execute permission. what is execute permission mean for dir if no read and write permission.
+
+it means if user tries to do `ls -l /home/bob/random_dir` it will show permission denied but if user execute a command like `cd /home/bob/random_dir`
+
+But if you notice the group has full permissions but still not working. Actually permissions are checked sequentially and here owner permissions will be consider and no group permissions are checked further.
+
+But if some user of this group tried to list, it will work.
+
+##### octal value
+
+Below are some examples
+
+| octal | Permission |
+| ----- | ---------- |
+777|all permissions to ugo
+755|all to u, r & x to group and others
+555| r&x to all ugo
+644| r&w to u, read only to g and o
+
+##### possible octal combinations
+| octal | count | read | write | execute |
+| ----- | ----- | ---- | ----- | ------- |
+7|4+2+1|y|y|y
+6|4+2+0|y|y|n
+5|4+0+1|y|n|y
+4|4+0+0|y|n|n
+3|0+2+1|n|y|y
+2|0+2+0|n|y|n
+1|0+0+1|n|n|y
+0|0+0+0|n|n|n
+
+### chown/chgrp
+To change the owner of the file
+
+* `chown bob:developer test.txt` will change the owner and group of the file to bob and developer.
+* `chown bob test.txt` change only the owner of the file to bob
+* `chgrp developer test.txt` change only the group of the file to developer
