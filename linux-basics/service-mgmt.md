@@ -113,3 +113,15 @@ This is a command line tool to get the logs information about service units.
 
 `journalctl`
 
+# Logs
+* To see the `systemd` service logs, we can use journalctl as we see above.
+* `/var/log/messages` To see any general messages produced by any process in the system
+* `/var/log/syslog` To see any general messages produced by any process in the system. For **debian** based systems.
+
+## Kernel logs
+To see kernel specific log messages
+* `dmesg | grep kernel`. dmesg will show ring buffer messages which is logs of system startup when filesystem is not started which can have useful messages about events, hardware and kernel during startup.
+* `journalctl -k` to see the systemd journal specific messages about kernel
+* `less /var/log/kern.log` To see the kernel logs.
+
+All of the above methods may not work every distribution but they will cover most of the distributions.
