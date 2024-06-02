@@ -180,7 +180,7 @@ To create an archive file. this is to put multiple files in a single file called
 bzip2 compress to the smaller size than others.
 
 ### uncompress
-* `buzip2 test.img.bzip2' will uncompress it create `test.img`.
+* `bunzip2 test.img.bzip2' will uncompress it create `test.img`.
 * `gunzip test.img.gz' will uncompress it create `test.img`
 * `unxz test.img.xz' will uncompress it create `test.img`
 
