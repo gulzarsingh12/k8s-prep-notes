@@ -51,6 +51,21 @@ A good use case would be to push the start/home dir in the beginning to the stac
    Hello again
    cntrl+D
   ````
+* To pass multiple commands/text from commandline to next command as pipe
+  ````
+  cat << EOF | k apply -f -
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: nginx
+  spec:
+    containers:
+    - name: nginx
+      image: nginx
+      ports:
+      - containerPort: 80
+  EOF
+  ````
 
 ### ls
 * to get the long list `ls -l`.
