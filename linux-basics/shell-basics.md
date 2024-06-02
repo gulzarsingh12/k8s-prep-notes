@@ -174,7 +174,7 @@ bzip2 compress to the smaller size than others.
 * `bzcat file.txt.bz2` work like `cat file.txt`
 * `xzcat file.txt.xz` work like `cat file.txt`
 
-**Note** zcat didnt work for me on mac but gzcat worked. zcat/ghzcat work for all extensions.e.g. gz, bzip2, xz etc. but xzcat and bzcat only work for their respective extenions only.
+**Note** zcat didnt work for me on mac but gzcat worked. zcat/gzcat work for all extensions.e.g. gz, bzip2, xz etc. but xzcat and bzcat only work for their respective extenions only.
 
 ## Search
 
