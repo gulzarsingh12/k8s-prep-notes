@@ -29,7 +29,7 @@ There are always 2 additional hidden pointers are created with every `mkdir` cal
 * `..` points to parent dir. `cd ..` will change to parent dir
   
 ### pushd/popd
-`pushd` will work do same as `cd` and also push the dir to stack. `popd' will retrieve it from stack and do `cd`
+`pushd` will work do same as `cd` and also push the dir to stack. `popd` will retrieve it from stack and do `cd`
 
 A good use case would be to push the start/home dir in the beginning to the stack and then do your work in the script by doing `cd` to multiple dirs etc. To come back to the original dir where it started, `popd` can be run again.
 
