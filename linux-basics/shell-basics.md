@@ -208,7 +208,7 @@ bzip2 compress to the smaller size than others.
 * `cat test.txt >> sample.txt` to redirect the output to sample.txt to **append** the contents
 * `cat missing_file 2>error.txt` 2 means the standard error to error.txt
 * `cat missing_file 2>/dev/null` 2 means the standard error to null device
-* `echo "Hello | tee -a text.txt` to append to the test.txt. `tee` display also on the stdout.
+* `echo "Hello" | tee -a text.txt` to append to the test.txt. `tee` display also on the stdout.
 
 ## VI Editor
 This is most commonly used editor. other option is nano. nowadays, vim is used and is more enhanced and feature rich than vi. In many of the os's, vi is pointing to vim. you can check that using `ls -l /usr/bin/vi`  it might be pointing to vim.
