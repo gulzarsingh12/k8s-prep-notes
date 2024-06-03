@@ -55,7 +55,7 @@ To list information the block devices. it will list the physical disks and their
 ### lscpu
 To list the information about cpu. 
 - architecture - tell you if 64bit or 32 bit. 32 bit can have max 3GB, 64 bit can have 18EB.
-- cpus - total no of virtuals cpu core. it can be counter as threads*cores*sockets
+- cpus - total no of virtuals cpu core. it can be counted as `threads * cores * sockets`
 - threads - the hypervised core/threads or logical processor
 - the actual cores on the socket
 - the physical socket on the chip.
