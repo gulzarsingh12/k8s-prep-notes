@@ -60,7 +60,7 @@ To list the information about cpu.
 - the actual cores on the socket
 - the physical socket on the chip.
 
-To count the cpus in above. For example if there is 1 socket having 4 cores and each core has 2 threads. then it is calculated as 1*4*2=8 cpus.
+To count the cpus in above. For example if there is 1 socket having 4 cores and each core has 2 threads. then it is calculated as `1*4*2=8` cpus.
 
 ### lsmem
 To get the information about memory.
