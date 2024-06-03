@@ -28,7 +28,7 @@ Memory is dividied into 2 spaces. **Kernel** space and **User** space.
 - A processes is run with limited access in user space to cpu and memory. User applications are run in user space and if need anything which is part of kernel space, it uses system calls. for example to `cat /etc/os-release`. This will result in `open` system call. other examples of system calls are `close` `getpid` `closedir` etc.
 
 ## Harware
-To understand working with hardware, just take an example of usd drive. When usb drive is connected, device drivers code executes (Kernel Space) and detect a stage change and generate the event. it is called **uevents**. Then uevents event is send to **udev** service (User Space). **udev** will create the the device node for usb drive under /dev filesystem.i.e. **/dev/sdb1**. Once the process is complete, newly attached device is visible in **/dev** filesystem.
+To understand working with hardware, just take an example of usb drive. When usb drive is connected, device drivers code executes (Kernel Space) and detect a stage change and generate the event. it is called **uevents**. Then uevents event is send to **udev** service (User Space). **udev** will create the the device node for usb drive under /dev filesystem.i.e. **/dev/sdb1**. Once the process is complete, newly attached device is visible in **/dev** filesystem.
 
 ### dmesg
 When linux os boots, kernel logs are written to ring buffer called dmesg. (Ring buffer is like something in-memory buffer for writing kernel log which overrides the oldest log like in a ring as it is constant in size.)
