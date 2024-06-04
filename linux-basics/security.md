@@ -175,7 +175,7 @@ and `bob:!:18341:0:99999:7:::` to /etc/shadow
 * -s specify shell
 * -G multiple secondry groups
 
-Checl with `id bob`
+Check with `id bob`
 
 ### userdel
 to delete user  `userdel bob`
