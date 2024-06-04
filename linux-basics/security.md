@@ -8,7 +8,7 @@ Suppose I want to login to the linux system, I can easily open the ssh and conne
 Just think about it, how this ssh can authenticate the user? PAM (Pluggable Authentication Module) is the revolutionary step in this. Any app can defer the authenctication to the PAM and PAM will do the authentication for you.
 
 Suppose you develop an app, you want to authenticate with the system. How would you do that? One way is that you get the user credentials and then validate it with `/etc/passwd` and `/etc/shadow` to ensure user is authenticated. However, you are doing this manually. there can be any issue and every app have to do this authentication. what about different authentication methods like fingerprint, biometric verification etc. How to do that and everything in the world in the app itself?
-Solution is PAM. App can let PAM to authenticate the user for it. This is very useful specially for application who are used systems. Pam related configuration can be defined for the apps at `/etc/pam.d` and `/ets/security`
+Solution is PAM. App can let PAM to authenticate the user for it. This is very useful specially for application who are using systems. Pam related configuration can be defined for the apps at `/etc/pam.d` and `/ets/security`
 PAM modules can also limit the system resources like cpu and memory to ensure that one user is not using all the system resources. There are many modules in PAM.
 
 ### without PAM
