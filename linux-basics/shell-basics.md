@@ -254,6 +254,7 @@ There are 3 modes in vi
 * `ctrl+r` to redo
 * `/` to search forward from current line. `n` to find next, `N` to find previous
 * `?` to search backward from the current line. `n` to find next/up, `N` to find previous/down
+* `gg` to go to top. `Shift+g` to go to end. `<line_num> + shift + g` to go specific line.
 
 #### ident
 `vjj>` will select 3 lines from current line and then ident them once base on set width size.
