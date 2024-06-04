@@ -17,7 +17,7 @@ Kernel's functionality can be extended using dynamically loaded modules.
 #### Version
 To get the kernel version run `uname`
 
-`uname -r'  returns `4.15.0.72-generic` 
+`uname -r`  returns `4.15.0.72-generic` 
 
 `uname -a` return more information.
 
