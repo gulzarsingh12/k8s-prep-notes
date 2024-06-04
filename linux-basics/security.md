@@ -122,7 +122,7 @@ Aliases in sudoers file
 These are created in a way to not edit directly but using commands.
 
 ### /etc/passed
-`bob:x:1001:1001::/home/bob:/usr/sbin/bash`
+`bob:x:1001:1001::/home/bob:/usr/bin/bash`
 
 * USERNAME.e.g. bob
 * PASSWORD.e.g. x. Password is not saved here. It is not stored here but in `/etc/shadow` file
