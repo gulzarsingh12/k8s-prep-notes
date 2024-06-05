@@ -66,6 +66,10 @@ A good use case would be to push the start/home dir in the beginning to the stac
       - containerPort: 80
   EOF
   ````
+* To pass single line ar input to next as pipe
+  ````
+  cat <<< 'Hello World' | grep World
+  ````
 
 ### ls
 * to get the long list `ls -l`.
