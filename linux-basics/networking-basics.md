@@ -66,3 +66,26 @@ This is the also used to resolve the ip address of the host from dns server.
 
 ### dig
 This is better tool then nslookup and give more information. it will give more information.
+
+# Network Interfaces
+
+## Switch
+
+How to connect 2 devices with each other? We can use switch for this. 
+
+A switch is used to connect multiple devices with each other. 
+
+### How it works
+Suppose A want to connect to B. It will connect to switch. Support A is connected on port 1. B is connected on port 2. Switch has its CAM memory to remember this
+
+MAC|Port
+---|----
+A|1
+B|2
+C|3
+
+
+A ---  Switch --- B
+
+On a same network, 2
+To see the network interfaces `ip link`
