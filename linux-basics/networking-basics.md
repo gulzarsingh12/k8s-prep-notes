@@ -73,10 +73,11 @@ This is better tool then nslookup and give more information. it will give more i
 
 How to connect 2 devices with each other? We can use switch for this. 
 
-A switch is used to connect multiple devices with each other. 
+A switch is used to connect multiple devices with each other. There 2 types of switches, layer 2 (OSI layer 2, mac address) and layer 3 (osi layer 3, network layer). layer 2 switch use mac address and layer 3 switch use ip address. Some switch can do both. But most switches are layer 2 switches.
+This is usually used to create local network (LAN)
 
 ### How it works
-Suppose A want to connect to B. It will connect to switch. Support A is connected on port 1. B is connected on port 2. Switch has its CAM memory to remember this
+Suppose A want to connect to B. It will connect to switch. Support A is connected on port 1. B is connected on port 2. Switch has its CAM memory to remember this as below table.
 
 MAC|Port
 ---|----
@@ -84,8 +85,38 @@ A|1
 B|2
 C|3
 
-
 A ---  Switch --- B
 
-On a same network, 2
-To see the network interfaces `ip link`
+If a data packet comes for A, it will check in the table for the mac and forward to the port 1. This happen at layer 2 (switch). so mac addresses are used. when packet come (layer 3), its header will have ip address.
+
+
+#### local
+If we take example above, When A want to connect to B using switch, it will try to resolve via mac address. switch doesnt need ipaddress. it will just check the mac address in its CAM memory table.
+
+To list the interfaces on both A and B run `ip link` command. You should see the interface name like `eth0`
+
+Then create the ipaddress on both the interfaces using 
+A -> `ip addr add 192.168.1.2/24 dev eth0`
+B -> `ip addr add 192.168.1.3/24 dev eth0`
+
+Now if you ping B from A, it will work in case of switch as switch will work and connect both devices at layer 2 using mac addresses.
+
+## Router
+In case of switch we can connect with devices easily at layer 2. As it is layer 2 so it has to be connected physically using the interface to the port on switch. without which it wont work because its layer 2, hence no ip address.
+
+But what about if A or B want to connect to C or D which are on some other network. Then Router is the way to connect in that case.
+
+A/B --> Router <---C/D
+
+You can check the routes in routing table using `ip route` or `route` command.
+It will show destination, gateway used to connect.
+Suppose C has 192.168.2.2 as ip address, then route has to be added as below on A/B to connect to C/D
+
+`ip route add 192.168.2.0/24 via 192.168.1.1`
+
+This way A/B can connect with C or D. To c to connect to A/B, we need similar entry on c as `ip route add 192.168.1.0/24 via 192.168.2.1`
+
+Here 192.168.1.1 and 192.168.2.1 are ip addresses on the router.
+
+## Gateway
+Gateway is the router which acts as exit and entry point for a network. for example as router in home wifi netowork also acts as gatway to internet.
