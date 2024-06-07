@@ -120,3 +120,17 @@ Here 192.168.1.1 and 192.168.2.1 are ip addresses on the router.
 
 ## Gateway
 Gateway is the router which acts as exit and entry point for a network. for example as router in home wifi netowork also acts as gatway to internet.
+
+## Troubleshooting
+When connection doesn't work from your machine to the server, try below
+1. Check if network interface is up? `ip link`. it should show **UP**
+2. Try nslookup. `nslookup caleston-repo-01`. if it return the ip address then it means we are able to get the ip from dns server.
+3. We can try to ping it. `ping http://caleston-repo-01`. if ping is not working, try next step
+4. Try to traceroute `traceroute 192.168.1.6`, suppose it show the middle router conneting but host is not connection
+   
+   My Machine -OK-> Router A -OK-> Router B -FAIL-> caleston-repo-01
+
+   B to host connection is not working hence we need to check host.
+5. Check if server is up and listening `netstat -an | grep 80 | grep -i LISTEN`. if it return that server is listening on port 80.
+6. we can try to check if interface is up `ip link` if interface is down. bring it up. `ip link set dev eth0 up`. Now connection should work.
+   
