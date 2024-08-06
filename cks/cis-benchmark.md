@@ -12,6 +12,6 @@ Run with beloe command using **CIS-CAT-Pro**
 ````
 ./Assessor-CLI.sh -i -rd /var/www/html/ -nts -rp index
 ````
--i - interactive
--nts - no timestamp
--rp - report file name. default format is html
+- i - interactive
+- nts - no timestamp
+- rp - report file name. default format is html
