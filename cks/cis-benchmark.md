@@ -77,4 +77,5 @@ For **kubelet**, there can be many nodes.
 for server side certs, each node sert should be set into **KubeletConfiguration** (kubeket-config.yaml)
 for client cert(this is required by each kubelet to connect with apiserver as client). Please rememeber to set group as `/O=system:nodes` and name as `/CN=system:node:node01` etc.
 
-
+## View Cert
+To view the cert `openssl x509 -in admin.crt -noout -text`
