@@ -61,7 +61,20 @@ Generate for kube admin
 - generate csr `openssl req -new -key admin.key -subj "/CN=kube-admin/O=system:masters" -out admin.csr`
 - generate the cert for ca `openssl x509 -req -in admin.csr -CA ca.crt -CAkey ca.key -out admin.crt`
 
-### kube-scheduler
+You can also pass these to rest api call to kube-apiserver or set in kube config under certificiate-authority or certificate-authority-data
+
+### control plane
 Same process as client but name should be prefixed with system. `-subj "/CN=system:kube-scheduler"`
 
-Same way generate certs for kube-cnstroller-manager, kube-proxy etc but remember the name prefix as `system:`
+Same way generate certs for kube-controller-manager, kube-proxy etc but remember the name prefix as `system:`
+
+For **etcd**, there can be multi certs to support HA. those should be gone to peer-cert-file and peer-key-files as comma separated entries.
+
+For **apiserver** there can be multiple names
+so it can set to openssl.cnf file and it can be passed to openssl command as `-extfile openssl.cnf`
+
+For **kubelet**, there can be many nodes. 
+for server side certs, each node sert should be set into **KubeletConfiguration** (kubeket-config.yaml)
+for client cert(this is required by each kubelet to connect with apiserver as client). Please rememeber to set group as `/O=system:node` and name as `/CN=system:node:node01` etc.
+
+
