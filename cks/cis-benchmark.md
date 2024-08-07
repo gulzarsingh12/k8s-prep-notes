@@ -43,4 +43,25 @@ Below are security primitives
     - rbac
   - all controlplane components communication can be secured using tls.
   - all pods/application communication can be secured using network policies
-    
+
+
+# TLS
+## CA
+Generate ca private key and then cert for ca 
+- generate private key `openssl genrsa -out ca.key 2048`
+- generate csr `openssl req -new -key ca.key -subj "/CN=kuebenetes-ca" -out ca.csr`
+- generate the cert for ca `openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt`
+
+## client
+### kube-admin
+User to login to cluster as admin
+
+Generate for kube admin
+- generate private key `openssl genrsa -out admin.key 2048`
+- generate csr `openssl req -new -key admin.key -subj "/CN=kube-admin/O=system:masters" -out admin.csr`
+- generate the cert for ca `openssl x509 -req -in admin.csr -CA ca.crt -CAkey ca.key -out admin.crt`
+
+### kube-scheduler
+Same process as client but name should be prefixed with system. `-subj "/CN=system:kube-scheduler"`
+
+Same way generate certs for kube-cnstroller-manager, kube-proxy etc but remember the name prefix as `system:`
