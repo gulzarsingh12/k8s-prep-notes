@@ -113,3 +113,7 @@ Note that port-forward works for pods, services, deployments etc etc..
 - or use auth proxy to authenticate user first and then redirect to dashboard
 - dont expose directly via load balancer etc.
 - 2 ways to use, token or kubeconfig. to use token `create sa my-user`, `k create token my-user` better expiry for the token. set the role and role binding for the user with least permissions.
+
+# verify binary
+- for linux use `sha512sum kuber.tar.gz`
+- on mac `shasum -a 512 kuber.tar.gz`
