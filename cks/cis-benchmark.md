@@ -79,3 +79,8 @@ for client cert(this is required by each kubelet to connect with apiserver as cl
 
 ## View Cert
 To view the cert `openssl x509 -in admin.crt -noout -text`
+
+## CSR
+- Generate the csr and set it to **CertificateSigningRequest** yaml and do k apply. view the csr `k get csr`
+- after that approve the csr `k certificate approve jane`
+- after approval get the generated cert to share with end user. `k get csr jane -o yaml`. decode the base64.
