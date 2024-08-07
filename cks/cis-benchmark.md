@@ -75,6 +75,6 @@ so it can set to openssl.cnf file and it can be passed to openssl command as `-e
 
 For **kubelet**, there can be many nodes. 
 for server side certs, each node sert should be set into **KubeletConfiguration** (kubeket-config.yaml)
-for client cert(this is required by each kubelet to connect with apiserver as client). Please rememeber to set group as `/O=system:node` and name as `/CN=system:node:node01` etc.
+for client cert(this is required by each kubelet to connect with apiserver as client). Please rememeber to set group as `/O=system:nodes` and name as `/CN=system:node:node01` etc.
 
 
