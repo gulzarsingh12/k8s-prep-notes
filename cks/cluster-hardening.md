@@ -104,4 +104,6 @@ So in summary we can do authenticate, authorize and diable read port to secure k
 
 # Port Forward
 - To access kube api server `kubectl proxy` will start on localhost using port 8001. this way it will not need to pass tls cert,key,ca with every request to api server.
-- But what about the application? to access a service in this case, use port forward. `kubectl port-forward service/web-service 28080:80`. then you can access the service on local as `curl http://localhost:28080`
+- But what about the application? to access a service in this case, use port forward. `kubectl port-forward service/web-service 28080:80`. then you can access the service on local as `curl http://localhost:28080`. 
+Note that port-forward works for pods, services, deployments etc etc..
+
