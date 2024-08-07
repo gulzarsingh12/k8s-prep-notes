@@ -84,3 +84,20 @@ To view the cert `openssl x509 -in admin.crt -noout -text`
 - Generate the csr and set it to **CertificateSigningRequest** yaml. base encode using `base64 -w 0` and do k apply. view the csr `k get csr`
 - after that approve the csr `k certificate approve jane`
 - after approval get the generated cert to share with end user. `k get csr jane -o yaml`. decode the base64.
+
+# Kubelet Security
+There are 2 parts mainly to secure in kubelet.i.e. authentication and authorization
+kubelet exposes 10250 and 10250 ports to access its api. 10250 is to provide api to access kubelet services but 10255 as a read only to access metrics of the pods and nodes etc. This is risky and should be disabled.
+
+## auth
+Set `anonumous-auth=false`, this will ensure that only authenticated user can connect to kubelet. there are 2 auth modes tls and bearer token. we will use cert here to discuss
+  
+when client-ca-file and cert and key are set for kubelet, it will enable the auth with cert. from client also, set the tls cert, key to authenticate. like by kubeaoi-server.
+
+## authorization
+set `authorization-mod=Webhook`. valid values are **AlwaysAllow** and **Webhook**. when set always allow is risky. set to webhook, then it will send it to apiserver to authorize it.
+
+## disable readonly port
+set `read-only-port=0` this will disable the 10255 port ofr read only access. if value is set 0, it means disabled
+
+So in summary we can do authenticate, authorize and diable read port to secure kubelet. Set all the above as discuss in service or kubeletconfiguration removing - (dash) with caps.
