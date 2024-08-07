@@ -107,3 +107,9 @@ So in summary we can do authenticate, authorize and diable read port to secure k
 - But what about the application? to access a service in this case, use port forward. `kubectl port-forward service/web-service 28080:80`. then you can access the service on local as `curl http://localhost:28080`. 
 Note that port-forward works for pods, services, deployments etc etc..
 
+# Kubernetes dashboard
+- Do not expose kubernetes dashboard to outside world.
+- if required, try to use it locally via kubectl proxy etc.
+- or use auth proxy to authenticate user first and then redirect to dashboard
+- dont expose directly via load balancer etc.
+- 2 ways to use, token or kubeconfig. to use token `create sa my-user`, `k create token my-user` better expiry for the token. set the role and role binding for the user with least permissions.
