@@ -55,3 +55,5 @@ apt remove apache2
 - check port description under  `/etc/services`
 - or check port listening on `netstat -an | grep -W LISTEN`
 - for k8s, check documentation to see which port should be open.
+
+In lab, i see they disable/stop the service to remove the port from listening.
