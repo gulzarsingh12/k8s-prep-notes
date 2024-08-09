@@ -50,7 +50,6 @@ apt remove apache2
   blacklist dccp
   ````
   disble module by adding entry as **blacklist**. can create any file with name ending in `.conf` under `/etc/modeprobe.d` dir.
-  ````
 
 ## identify ports
 - check port description under  `/etc/services`
