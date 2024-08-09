@@ -77,6 +77,11 @@ For **kubelet**, there can be many nodes.
 for server side certs, each node sert should be set into **KubeletConfiguration** (kubeket-config.yaml)
 for client cert(this is required by each kubelet to connect with apiserver as client). Please rememeber to set group as `/O=system:nodes` and name as `/CN=system:node:node01` etc.
 
+### cipher suites
+to make it more secure, you can specify the cipher suites to use.
+- kube api server `--tls-min-version=VersionTLS12 --tls-cpher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256`. default version is `VersionTLS10'. max version is `VersionTLS13`
+- etc `--cpher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256`
+
 ## View Cert
 To view the cert `openssl x509 -in admin.crt -noout -text`
 
