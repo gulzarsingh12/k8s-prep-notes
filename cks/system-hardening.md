@@ -1,3 +1,6 @@
+# Run command on ssh
+- `ssh user@host 'command1' 'command2'`. you can pass multiple commands
+
 # reduce attack surface
 - use POLP
 - remove obsolete and unwanted packages
@@ -75,3 +78,5 @@ In lab, i see they disable/stop the service to remove the port from listening.
   - `ufw allow from 172.16.238.100/28 to any port 80 proto tcp`
   - `ufw deny 8080` although its not required as we deny all incoming
 - to delete `ufw delete deny 8080` or `ufw delete 5` to delete with sequence no
+
+
