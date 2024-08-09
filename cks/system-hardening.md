@@ -87,3 +87,18 @@ In lab, i see they disable/stop the service to remove the port from listening.
 - to run on a command `strace touch /tmp/error.log`. but this is to run a command with strace itself
 -  to run with a already running process. get pid of the process `pidof etcd` and then `strace -p 2345`, it will show all the sys calls that will be used now ondwards by the process.
 -  to show all the sys calls made by a command `strace -c touch /tmp/error.log`
+
+## tracee (from aqua security)
+tracee is an open source tool and uses eBPF (extended berkley package filter) technology which runs in kernel space without interfering with kernel source code or loading any modules. 
+you can install it or run as docker container.
+
+if container, need to mount
+-  `/tmp/tracee` default workspace
+-  `/lib/modules` kernel headers
+-  `/usr/src` kernel headers
+need previleged flag to be true
+
+### examples
+- to see the syscalls for ls command `docker run --name tracee --rm --previleged --pid=host --v /tmp/tracee:/tmp/tracee --v /lib/modules/:/lib/modules/:ro --v /usr/src/:/usr/src/:ro aquasec/tracee:0.4.0 --trace com=ls`
+- to see all the sys calls for a new process `docker run --name tracee --rm --previleged --pid=host --v /tmp/tracee:/tmp/tracee --v /lib/modules/:/lib/modules/:ro --v /usr/src/:/usr/src/:ro aquasec/tracee:0.4.0 --trace pid=new`
+- to see syscalls for new containers `docker run --name tracee --rm --previleged --pid=host --v /tmp/tracee:/tmp/tracee --v /lib/modules/:/lib/modules/:ro --v /usr/src/:/usr/src/:ro aquasec/tracee:0.4.0 --trace container=new` ...  then run the container in separate window as `docker run ubuntu echo hi`
