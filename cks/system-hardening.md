@@ -1,7 +1,7 @@
 # Run command on ssh
 - `ssh user@host 'command1' 'command2'`. you can pass multiple commands
 
-# reduce attack surface
+# Reduce attack surface
 - use POLP
 - remove obsolete and unwanted packages
 - remove unwanted kenrnel modules
@@ -80,3 +80,10 @@ In lab, i see they disable/stop the service to remove the port from listening.
 - to delete `ufw delete deny 8080` or `ufw delete 5` to delete with sequence no
 
 
+# Syscalls
+## Strace
+`strace` is the utility provided by the os itself to trace sys calls. `which strace`
+
+- to run on a command `strace touch /tmp/error.log`. but this is to run a command with strace itself
+-  to run with a already running process. get pid of the process `pidof etcd` and then `strace -p 2345`, it will show all the sys calls that will be used now ondwards by the process.
+-  to show all the sys calls made by a command `strace -c touch /tmp/error.log`
