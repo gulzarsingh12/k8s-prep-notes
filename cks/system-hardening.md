@@ -15,10 +15,17 @@
   - `id` `last` `who` commands. remove unwanted users from /etc/passwd, /etc/shadow, /etc/group etc. diable shell, add /bin/nologin option. `usermod -s /bin/nologin john`
 
 
-### ssh hardening
+## ssh hardening
 - disbale root acess
 - disbale password based auth
 
 update `/etc/ssh/sshd_config` with `PermitRootLogin no' and `PasswordAuthentication no`
 
 to first login with certificate use `ssh-keygen -t rsa` to generate key and then `ssh-copy-id john@node01` to copy the ssh public key to server.
+
+## sudo
+Add a user to sudo without enabling root login.
+
+`visudo` to `/etc/sudoers` to add the user.
+
+**Note** `useradd` didn't work for adding user for ssh. use `adduser` instead
