@@ -29,3 +29,30 @@ Add a user to sudo without enabling root login.
 `visudo` to `/etc/sudoers` to add the user.
 
 **Note** `useradd` didn't work for adding user for ssh. use `adduser` instead
+
+## remove obsolete package
+- check if any unwanted package?  like apache2.. remove it
+- check if any unwanted service?  remove it 
+````
+systemctl list-units --type service
+systemctl stop apache2
+systemctl disable apache2
+apt remove apache2
+````
+
+## remove kernel modules
+- list all modes `lsmod`
+- enable module by running `modeprobe pcspkr`
+- disable module
+  ````
+  cat /etc/modeprobe.d/blacklist.conf
+  blacklist sctp
+  blacklist dccp
+  ````
+  disble module by adding entry as **blacklist**. can create any file with name ending in `.conf` under `/etc/modeprobe.d` dir.
+  ````
+
+## identify ports
+- check port description under  `/etc/services`
+- or check port listening on `netstat -an | grep -W LISTEN`
+- for k8s, check documentation to see which port should be open.
