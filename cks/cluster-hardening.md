@@ -114,6 +114,37 @@ Note that port-forward works for pods, services, deployments etc etc..
 - dont expose directly via load balancer etc.
 - 2 ways to use, token or kubeconfig. to use token `create sa my-user`, `k create token my-user` better expiry for the token. set the role and role binding for the user with least permissions.
 
-# verify binary
+# Verify Binary
 - for linux use `sha512sum kuber.tar.gz`
 - on mac `shasum -a 512 kuber.tar.gz`
+
+# Secure Docker
+Docker run with unix socket on the linux os. It is easy to use it locally as docker cli uses socket to connect with docker daemon and secure as only acceisble locally.
+
+But when it needs to connect with other host, it means if cli is run on another host then docker server should expose it on http(s).
+To secure the traffic between client and server in this case, set below
+`dockerd --host=tcp://192.168.1.10:2376 --tls=true --tlscert=/var/docker/server.pem --tlskey=/var/docker/serverkey.pem`
+
+there are 2 places to specify this, either in service unit file or in `/etc/docker/daemon.json`.
+````
+{
+  "hosts": ["tcp://192.168.1.10:2376"],
+  "tls": "true",
+  "tlscert": "/var/docker/server.pem",
+  "tlskey": "/var/docker/serverkey.pem"
+}
+````
+if any property specified at both places and have different value, it will throw error.
+
+with this data in transit will be encrypted but still anyone can access it. to ensure only authenticated user can access, enable cert based authentication using tlsverify.
+`dockerd --host=tcp://192.168.1.10:2376 --tls=true --tlscert=/var/docker/server.pem --tlskey=/var/docker/serverkey.pem --tlsverify=true --tlscacert=/var/docker/caserver.pem`
+
+This way above will only allow acces with client certificate. So for client side, when they access, they need to get the **clientcert.pem** and **clientkey.pem** **generated** from **caserver.pem**. this way only authenticated user will be able to access the system.
+
+With insecure docker, someone can
+- delete volumes/data
+- delete containers
+- gain access to host
+- run container for bit coin mining etc.
+
+
