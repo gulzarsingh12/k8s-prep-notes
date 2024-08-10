@@ -102,3 +102,46 @@ need previleged flag to be true
 - to see the syscalls for ls command `docker run --name tracee --rm --previleged --pid=host --v /tmp/tracee:/tmp/tracee --v /lib/modules/:/lib/modules/:ro --v /usr/src/:/usr/src/:ro aquasec/tracee:0.4.0 --trace com=ls`
 - to see all the sys calls for a new process `docker run --name tracee --rm --previleged --pid=host --v /tmp/tracee:/tmp/tracee --v /lib/modules/:/lib/modules/:ro --v /usr/src/:/usr/src/:ro aquasec/tracee:0.4.0 --trace pid=new`
 - to see syscalls for new containers `docker run --name tracee --rm --previleged --pid=host --v /tmp/tracee:/tmp/tracee --v /lib/modules/:/lib/modules/:ro --v /usr/src/:/usr/src/:ro aquasec/tracee:0.4.0 --trace container=new` ...  then run the container in separate window as `docker run ubuntu echo hi`
+
+## seccomp
+seccomp is available on almost all linux os.  To check if seccomp is supported
+
+`grep -i /boot/config-$(uname -r)` will print `CONFIG_SECCOMP=y`
+
+run `docker run -it --rm docker/whalesay /bin/sh` and see pid. it should be 1. check the seccomp for pid at `grep Seccomp /proc/1/status` will print `Seccomp: 2`, which means secomp profile is appled in filtered mode. this is because docker has built in secomp profile. it has blocked 60+ calls from 300+ including ptrace which is used in dirty cow attack.
+
+There r 3 modes.  **0 - diabled, 1 - strict, 2 - filtered**
+
+### format
+````
+{
+   "defaultAction": "SCMP_ACT_ERRNO",
+   "architectures": [
+      "SCMP_ARCH_X86_64",
+      "SCMP_ARCH_X86_64",
+      "SCMP_ARCH_X86_64"
+   ],
+   "syscalls": {
+      "names": [
+         <syscall-1>,
+         <syscall-1>,
+         <syscall-1>
+      ],
+      "action": "SCMP_ACT_ALLOW"
+   }
+}
+````
+
+- in above, default action is errno, which means block all calls except in list which are allowed. this is like whitelist profile but this is hard to implement as we need to know all the calls made by application
+
+- another way could be blacklist, wehere default action is allow and then list contains blocked syscalls. this is better for most of the apps but there is a risk as all calls are allowed by default.
+
+docker secomp inbuilt profile nlocks 60+ calls including reboot, change time, create/delete modules, mount/umount etc.
+
+We can create custom profile and use them. `docker run --it --rm --security-opt seccomp=/root/custom.json docker/whalesay /bin/sh`
+
+we can also disable seccomp completely.  `docker run --it --rm --security-opt seccomp=unconfined docker/whalesay /bin/sh`
+
+However, it will still not allow you to change date and time as docker still provide additional security gates even with seccmp diabled.
+
+
