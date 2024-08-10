@@ -56,6 +56,6 @@ clusters from PSP to its replacement PSS/PSA.
 - when **enforce=restricted**, it is very much restricted and reject any violating request
 - **warn=restricted**, it will just get warning and still allow request if violated
 - for example
-  - for namespce payroll, we can use    enforce=restricted
-  - for namedpace hr,  enforce=baseline
-  - for namespace dev, warn=restrcited
+  - for namespce payroll, **enforce=restricted**
+  - for namedpace hr,  **enforce=baseline**
+  - for namespace dev, **warn=restrcited**
