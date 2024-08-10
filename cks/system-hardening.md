@@ -88,7 +88,7 @@ In lab, i see they disable/stop the service to remove the port from listening.
 -  to run with a already running process. get pid of the process `pidof etcd` and then `strace -p 2345`, it will show all the sys calls that will be used now ondwards by the process.
 -  to show all the sys calls made by a command `strace -c touch /tmp/error.log`
 
-## tracee (from aqua security)
+## Tracee (from aqua security)
 tracee is an open source tool and uses eBPF (extended berkley package filter) technology which runs in kernel space without interfering with kernel source code or loading any modules. 
 you can install it or run as docker container.
 
@@ -98,12 +98,12 @@ if container, need to mount
 -  `/usr/src` kernel headers
 need previleged flag to be true
 
-### examples
+### Examples
 - to see the syscalls for ls command `docker run --name tracee --rm --previleged --pid=host --v /tmp/tracee:/tmp/tracee --v /lib/modules/:/lib/modules/:ro --v /usr/src/:/usr/src/:ro aquasec/tracee:0.4.0 --trace com=ls`
 - to see all the sys calls for a new process `docker run --name tracee --rm --previleged --pid=host --v /tmp/tracee:/tmp/tracee --v /lib/modules/:/lib/modules/:ro --v /usr/src/:/usr/src/:ro aquasec/tracee:0.4.0 --trace pid=new`
 - to see syscalls for new containers `docker run --name tracee --rm --previleged --pid=host --v /tmp/tracee:/tmp/tracee --v /lib/modules/:/lib/modules/:ro --v /usr/src/:/usr/src/:ro aquasec/tracee:0.4.0 --trace container=new` ...  then run the container in separate window as `docker run ubuntu echo hi`
 
-## seccomp
+## Seccomp
 seccomp is available on almost all linux os.  To check if seccomp is supported
 
 `grep -i /boot/config-$(uname -r)` will print `CONFIG_SECCOMP=y`
@@ -195,3 +195,90 @@ but it will print the number of the syscall , to see which call it is, `grep -w 
 another way is to run tracee in `--trace container==new`, it will print the syscall names with container names to identify it.
 
 in exam, they can ask to copy a secomp profile from a location to all nodes and then apply it.
+
+## AppArmor
+seccomp is good for blocking syscalls but not cater to cases where you need to allow syscall conditionally. for example if you want to allow write to a file syscall but doesnt want to allow it to write in certain dir path like /proc. another example is that you dont want to allow remount of root filesystem. For those custom requirements app armor can be used.
+
+To use app armor, you need to ensure app armor kernel module is loaded `cat /sys/module/apparmor/parameters/enabled` should be `y or Y`
+
+it also create profiles like seccomp. these profiles are are loaded in kernel and are defined at `/sys/kernel/security/apparmor/profiles`
+
+### profiles
+````
+#apparmor-deny-write
+
+profile apparmor-deny-write flags(attached_disconnected) {
+   file,
+   # Deny all file writes
+   deny /** w
+}
+
+#apparmor-deny-proc-write
+
+profile apparmor-deny-proc-write flags(attached_disconnected) {
+   file,
+   # Deny all /proc file writes
+   deny /proc/* w
+}
+
+#file in above means allow files
+
+
+#apparmor-deny-remount-root
+
+profile apparmor-deny-remount-root flags(attached_disconnected) {
+   # Deny remount the read only root filesystem
+   deny mount options(ro, remount) -> /
+}
+````
+
+check loaded profiles by `aa-status`
+
+3 modes - enforce, complain, unconfined
+
+in complain mode, it will just complain and log warnings.
+
+### create profiles
+use app aror tools
+
+`apt install apparmor-utils`
+
+then run `aa-genprof /root/add_data.sh` to generate the profile.   note that add_data.sh is the actual command we want to run and get syscalls for that application run.
+
+In a separate window, run `./add_data.sh`, in genprof window allow/deny whichever calls you want to allow or deny.
+it will ask questions. answer like `Inherit` or `Allow` to allow syscall. it will provide severity too for each call.
+
+check `aa-status` to see if above new profile is added.
+
+### disable a profile
+- To load a profile `apparmor_parser /etc/apparmor.d/root.add_data.sh`
+- To disable it do the same above with **-R**
+  ````
+  apparmor_parser -R /etc/apparmor.d/root.add_data.sh
+  ln -s /etc/apparmor.d/root.add_data.sh /etc/apparmor.d/disable/
+  ````
+
+## apparmor in kubernetes
+
+below are requirements
+- apparmor kernel module enabled
+- appaemour profiles loaded in kernel
+- container runtime should support apparmor profile (this is usally supported on all.i.e. docker, containerd crio etc.
+- ensure profile are loaded `aa-status`
+
+  add below annotation in pod under metadata `container.apparmor.security.beta.kubernetes.io: localhost/<profile-name>`
+
+  for e.g. `container.apparmor.security.beta.kubernetes.io: localhost/apparmor-deny-write`
+
+## linux capabilities
+From linux kernel >2.2
+there are previlege and unprevilege processes.  there are limited capabilities assigned even to previlege processes.
+to check capibilities `getcap /usr/bin/ping` or `getcap 332` (pid) to see sys calls 
+
+be default docker allows 12 syscalls only. hence when even run kubernetes pod with seccompProfile=unconfined, systime is not allowed. But to allow it, you need to add capability as below
+````
+securityContext:
+   capabilties:
+      add: ["SYS_TIME"]
+````
+so now, it will work.
