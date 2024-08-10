@@ -79,8 +79,9 @@ allow {
   input.user = john
 }
 ````
-- once policy is avaiable as above , this should be uploaded to opa server at /v1/policies/<policyname>
+- once policy is avaiable as above , this should be uploaded to opa server at /v1/policies/<policyname> `curl -X PUT --data-binary @sample.rego http://localhost:8181/v1/policies/samplepolicy`
 - once policy uploaded, then call the server from app to validate
+- to test policy file `./opa test example.rego`
 
 ## opa gatekeeper
 this is new approach as compare to above and better.
