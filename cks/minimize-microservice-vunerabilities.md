@@ -84,6 +84,8 @@ allow {
 - to test policy file `./opa test example.rego`
 
 ## opa gatekeeper
+`kube-mgmt` manages policies / data of Open Policy Agent instances in Kubernetes. so opa server's policies are managed by this kube-mgmt. to use it, create configmap from the policy rego file. it will automatically load into opa.
+
 this is new approach as compare to above and better.
 - install opa gatekeeper as container in k8s
 
@@ -96,6 +98,51 @@ it has 3 things
 example  (what - expensive namespace has billing label, where - target is admission.k8s.gatekeeper.sh, how - check the label if missing then reject.
 
 it has **ConstraintTemplate** to specify what to check. apply `k apply -f constrainttemplate.yaml`
+````
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8srequiredlabels
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sRequiredLabels
+      validation:
+        # Schema for the `parameters` field
+        openAPIV3Schema:
+          type: object
+          properties:
+            labels:
+              type: array
+              items:
+                type: string
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8srequiredlabels
 
+        violation[{"msg": msg, "details": {"missing_labels": missing}}] {
+          provided := {label | input.review.object.metadata.labels[label]}
+          required := {label | label := input.parameters.labels[_]}
+          missing := required - provided
+          count(missing) > 0
+          msg := sprintf("you must provide labels: %v", [missing])
+        }
+````
+
+````
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: ns-must-have-gk
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Namespace"]
+  parameters:
+    labels: ["gatekeeper"]
+````
 
 
