@@ -59,3 +59,6 @@ clusters from PSP to its replacement PSS/PSA.
   - for namespce payroll, **enforce=restricted**
   - for namedpace hr,  **enforce=baseline**
   - for namespace dev, **warn=restrcited**
+  - 
+## admission configuration
+to change what is applied to the kubernetes as PSA is done by changing the admission configuration. this is applied as `--admission-control-config-file` in kube-apiserver.
