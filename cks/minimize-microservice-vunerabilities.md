@@ -145,4 +145,62 @@ spec:
     labels: ["gatekeeper"]
 ````
 
+# Container Sandboxing
+Container run directly with syscall to kernel which is on host. hence it is insecure due to other multiple containers can be affected and even host itself. someone can esclate the previleges and control the host. This is not like vm where everything is dedicated to per vm.
 
+## runtime classes
+gvisor and kata use different runtimes to run the containers. gvisor uses **runsc** and kata uses **kata**. 
+
+as both are oci compliant, we can use docker cli to run the containers.
+
+`docker run --runtime kata -d nginx`
+`docker run --runtime runsc -d nginx`
+
+### kubernetes
+We have to create first **RuntimeClass** first
+````
+apiVersion: node.k8s.io/vabeta1
+kind: RuntimeClass
+metadata:
+  name: gvisor
+handler: runsc
+````
+use `kata` for kata containers
+
+In pod spec, provide `runtimeClassName: gvisor`
+
+check process `pgrep -a nginx`, it wont show anything, that means it is sandboxed. we can also see if runsc is running. `pgrep -a runsc`
+
+## gVisor
+it allow additional layer between container and kernel. it will recieve the syscalls but its not directly to host.
+
+Container
+   |
+Syscalls
+   |
+Sentry | Gofer (gvisor)
+   | 
+Linux kernel
+   |
+Hardware
+
+### gvisor sandbox
+contains 2 components
+- sentry - independent application level kernel. it is designed for container in mind. so it supprts only fewer syscalls to avoid the flaws.
+For example if app needs acces to file, it wont allow it directly access system files rather uses gofer to call to kernel to provide what is requested. it acts as middleman.
+for network, it will use its own network stack to isolate it from kernel.
+
+Every container will have dedicated gvisor to isolate. so it wont affect all other containers
+
+However, disadvanatage 
+- is that it may not work with every app
+- due to middleman, more instrcutions to execute
+
+## kata containers
+as we know traditionally we use vm's which is more restricted as compare to containers. 
+
+kata will use the vm approch. it will run every container in separate light weight vm. 
+
+ - vm are lightwieght and performance is optimized but still some overhead of memory and space
+ - another problem is that it needs bare metal because it runs a vm hence can't run vm inside vm. most of provider doesnt support. google cloud provide but needs to enable it. its not enabled by default.performance is very poor
+ - on bare metal, it is fine to run and wont see performance issues like nested vm.
