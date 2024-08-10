@@ -35,3 +35,27 @@ clusters from PSP to its replacement PSS/PSA.
 - also its not easy to find where it is applied and where not.
 
 # PSA
+- easy to use
+- safe
+- enabled by default `PodSecurity`
+- it is applied via adding a label to namespace. `pod-security.kubernetes.io/<mode>=<securitystandard>`
+- There are no additional config is like config for PSP created eariler.
+- Just defined label as namespace level as above.
+- There are 3 modes and 3 standard
+
+  PSA
+  - enforce
+  - audit
+  - warn
+ 
+  PSS
+  - previleged
+  - baseline
+  - restricted
+ 
+- when **enforce=restricted**, it is very much restricted and reject any violating request
+- **warn=restricted**, it will just get warning and still allow request if violated
+- for example
+  - for namespce payroll, we can use    enforce=restricted
+  - for namedpace hr,  enforce=baseline
+  - for namespace dev, warn=restrcited
