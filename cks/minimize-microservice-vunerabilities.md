@@ -79,4 +79,22 @@ allow {
   input.user = john
 }
 ````
+- once policy is avaiable as above , this should be uploaded to opa server at /v1/policies/<policyname>
+- once policy uploaded, then call the server from app to validate
+
+## opa gatekeeper
+this is new approach as compare to above and better.
+- install opa gatekeeper as container in k8s
+
+### opa constraint framework
+it has 3 things
+- what - requirement
+- where - k8s admission controller
+- how - what to check and what action to take
+
+example  (what - expensive namespace has billing label, where - target is admission.k8s.gatekeeper.sh, how - check the label if missing then reject.
+
+it has **ConstraintTemplate** to specify what to check. apply `k apply -f constrainttemplate.yaml`
+
+
 
