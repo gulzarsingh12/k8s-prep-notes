@@ -62,3 +62,21 @@ clusters from PSP to its replacement PSS/PSA.
   - 
 ## admission configuration
 to change what is applied to the kubernetes as PSA is done by changing the admission configuration. this is applied as `--admission-control-config-file` in kube-apiserver.
+
+# OPA
+- It is like validating some input for a web application. for example, if application get a request from web, application want to reject the request if user != john. 
+-  Same above thing can be deployed on kubernetes object when created.e.g. pods, services etc.
+-  Opa can be install and run as server, from application, request can be forwarded to opa server to validate. opa file is writen in reg language
+````
+package httpapi.authz
+
+import input
+
+default allow = false
+
+allow {
+  input.path = home
+  input.user = john
+}
+````
+
