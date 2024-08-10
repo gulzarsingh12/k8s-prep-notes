@@ -110,7 +110,7 @@ seccomp is available on almost all linux os.  To check if seccomp is supported
 
 run `docker run -it --rm docker/whalesay /bin/sh` and see pid. it should be 1. check the seccomp for pid at `grep Seccomp /proc/1/status` will print `Seccomp: 2`, which means secomp profile is appled in filtered mode. this is because docker has built in secomp profile. it has blocked 60+ calls from 300+ including ptrace which is used in dirty cow attack.
 
-There r 3 modes.  **0 - diabled, 1 - strict, 2 - filtered**
+There r 3 modes.  **mode 0 - diabled, mode 1 - strict, mode 2 - filtered**
 
 ### format
 ````
@@ -144,4 +144,54 @@ we can also disable seccomp completely.  `docker run --it --rm --security-opt se
 
 However, it will still not allow you to change date and time as docker still provide additional security gates even with seccmp diabled.
 
+### seccomp in k8s
+seccomp profile feature is introduced since kubernetes **1.22** but it is disabled by default and that means it is unconfined as default. but you can change it under securityContext section of the **pod** to below allowed values
 
+if not defined, then it is unconfined as below.
+````
+securityContext:
+    seccompProfile:
+      type: Unconfined
+````
+
+````
+securityContext:
+    seccompProfile:
+      type: RuntimeDefault
+````
+it means, it will use the container runtime seccomp profile.
+
+````
+securityContext:
+    seccompProfile:
+      type: Localhost
+      localhostProfile: profiles/custom.json
+````
+it means, it will apply custom seccop profile which is stored on kubelet at `/var/lib/kubelet/seccomp/profiles/custom.json`. it has to be under `/var/lib/kubelet/seccomp`
+
+
+in above case, it is explicitly enabled otherwise unconfined. 
+
+Since **v1.27**, it can be enabled as **RuntimeDefault** for any container by passing `--seccomp-default` to kubelet runtime. To use it as unconfined, you have to explicitly do that.
+
+To check it in docker, try as 
+`docker run r.j3ss.co/amicontainerd amicontainerd`, it will show 64 calls blocked
+
+to check in kubernetes,
+`k run amicontainerd --image r.j3ss.co/amicontainerd -- amicontainerd`, it will print disabled, which means k8s by default is unconfined.
+
+
+when running under seccompProfile as runtimedefault, it is possible that application may escalate the priveleges, to avoid that also set `allowPrevilegeEscalation: false` in container section of the security context.
+
+if used audit profile, audit.json in seccompProfile localhost
+````
+{
+    "defaultAction": "SCMP_ACT_LOG"
+}
+````
+it will print all syscalls. you can check that in `grep syscall /var/log/syslog` file.
+but it will print the number of the syscall , to see which call it is, `grep -w 35 /usr/include/asm/unistd_64.h`
+
+another way is to run tracee in `--trace container==new`, it will print the syscall names with container names to identify it.
+
+in exam, they can ask to copy a secomp profile from a location to all nodes and then apply it.
