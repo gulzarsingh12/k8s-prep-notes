@@ -149,7 +149,7 @@ spec:
 Container run directly with syscall to kernel which is on host. hence it is insecure due to other multiple containers can be affected and even host itself. someone can esclate the previleges and control the host. This is not like vm where everything is dedicated to per vm.
 
 ## runtime classes
-gvisor and kata use different runtimes to run the containers. gvisor uses **runsc** and kata uses **kata**. 
+gvisor and kata use different runtimes to run the containers. gvisor uses **runsc** and kata uses **kata-runtime**. 
 
 as both are oci compliant, we can use docker cli to run the containers.
 
@@ -165,7 +165,7 @@ metadata:
   name: gvisor
 handler: runsc
 ````
-use `kata` for kata containers
+use `kata-runtime` for kata containers
 
 In pod spec, provide `runtimeClassName: gvisor`
 
