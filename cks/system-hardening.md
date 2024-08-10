@@ -270,6 +270,16 @@ below are requirements
 
   for e.g. `container.apparmor.security.beta.kubernetes.io: localhost/apparmor-deny-write`
 
+Above annotation was used from v1.4 to v1.29. Since v1.30, it is set as below
+````
+securityContext:
+  appArmorProfile:
+    type: <profile_type>
+````
+type is **RuntimeDefault, Localhost, Unconfined**
+
+for locahost, use **localhostProfile** to set the profile and verify `kubectl exec hello-apparmor -- cat /proc/1/attr/current` should retrun profile name.
+
 ## linux capabilities
 From linux kernel >2.2
 there are previlege and unprevilege processes.  there are limited capabilities assigned even to previlege processes.
