@@ -242,3 +242,28 @@ there are couple of ways to whitelist the registry to fetch the docker images
 
 Under the configuration, **defaultAllow=true** means that if server is not available then it will allow the request without validating it. it uses kubeconfig file format to configure the webhook server.
 
+## kuebsec
+this is tool to static analysis of kubernetes resource.
+
+you can `kubesec scan pod.yaml` or `curl -sSX --data-binary @"pod.yaml" https://v2.kubesec.io/scan`
+
+## trivy
+this is to scan the docker images. this is from aquasecurity
+CVS score >7 is high and can be high risk.
+
+`trivy image nginx:1.18.0`
+
+you can pass severity level. `trivy image --severity CRITICAL,HIGH nginx 1.18.0`.  it will list only high and critical severity CVE's
+
+`trivy image --ignore-unfixed nginx:1.18.0` will report the CVE's which can be immediately fixed by upgrading the image.
+
+to scan image as archive file 
+````
+docker save nginx:1.18.0 nginx.tar
+trivy image --input nginx.tar
+````
+### best practices
+- peridically rescan images as new vunerabilities are discovered over the time.
+- can use admission controllers to scan images before pod is deployed.
+- use private repo with prescan images
+- integrate scan into cicd pipeline.
