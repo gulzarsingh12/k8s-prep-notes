@@ -204,3 +204,31 @@ kata will use the vm approch. it will run every container in separate light weig
  - vm are lightwieght and performance is optimized but still some overhead of memory and space
  - another problem is that it needs bare metal because it runs a vm hence can't run vm inside vm. most of provider doesnt support. google cloud provide but needs to enable it. its not enabled by default.performance is very poor
  - on bare metal, it is fine to run and wont see performance issues like nested vm.
+
+
+# mTLS
+
+istio and linkerd can be used to do mlts. it is done at service level.
+
+istio does by sidecar, it runs a sidecar to support encryption on each pod. so if podA is running app and istio sidecar, then sidecar will encrypt and send to podB's sidecar and which will then send to app in podB.
+
+but this is done on case by case. so if some external service to podA then it wont do mtls but if podA to podB then it will.
+
+- so podA - podB is called strict/enforced mode
+- but podA -external svc is called permissive/oppurtunistic mode.
+
+# Image Security
+-  **modular** - dont build everytihng into single image. like db and web etc.. only one function in one image
+-  **persist** -  dont store data in image rather use volumes or cache like redis
+-  choose base/parent image which is safe/secure and specific to your need.
+   - if need httpd, then use httpd image only
+   - use official image so that its verified
+- **uptodate** - image which is updated freqently. this means time to time updates to fix bugs and vunerabilties by maintainer
+- use **distroless** images like google's gcr.io/distroless/*, this will remove extra uneeded package from image
+- slim/minimal - only have minimal package not everything.. remove shells, packlage managers etc.
+- for dev its fine, for prod - use lean images
+- scan image for vunerability `trivy image httpd`
+
+## private repo
+you can use private repo to fetch from which is maintained by ur org and have approved and scanned images.
+kubernetes allow secrets to save the cred's for docker under **imagePullSecrets**
