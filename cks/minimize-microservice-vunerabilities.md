@@ -232,3 +232,13 @@ but this is done on case by case. so if some external service to podA then it wo
 ## private repo
 you can use private repo to fetch from which is maintained by ur org and have approved and scanned images.
 kubernetes allow secrets to save the cred's for docker under **imagePullSecrets**
+
+## image policy webhook
+there are couple of ways to whitelist the registry to fetch the docker images
+-  one could be to write your own admission controller and whitelist the request
+-  another could be using opa gatekeeper which we discussed already earlier to validate the name of docker image containing registry
+-  third way is to use the built in controller from k8s. **ImagePolicyWebhook** with this you can configure the webhook server to serve the request.
+  this plugin can be enabled in kube-apiserver in enable admission plugins. configuration to connect with server can be specified in AdmissionConfiguration via --admission-control-config-file.
+
+Under the configuration, **defaultAllow=true** means that if server is not available then it will allow the request without validating it. it uses kubeconfig file format to configure the webhook server.
+
