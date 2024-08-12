@@ -49,3 +49,35 @@ falco_rules.yaml as it can be overridden when upgraded.
 
 To hot reload the changes to rules or any config. `kill -1 <pid>`. pid of falco process.
 
+# Immutable vs Mutable Infrastructure
+
+## mutable
+we have a application deploye on 3 nodes. we want to upgrade the application from v1.17 to 1.19. suppose we are able to update first 2 nodes then failed at node 3 at version 1.18. There is a drift. and it is complex now. This is called in place upgrade. This type of infra is called mutable.
+
+## immutable
+same scenario above but we upgrade by adding a new node of 1.19 version and then remove node 1. we continue the same and replace all the nodes. this is called immutable infra.
+
+## ensure immutability
+- somebody can go to the container as exec and change the version so we can avoid that by add security context with `readOnlyRootFilesystem: true` but this will break the application as there wont be possible to write anything for application. to avoid that we can mount the volume for allowing write to those particualar dir.
+  ````
+  volumeMounts:
+    - name: cache-vol
+      mountPath: /var/cache/nginx
+    - name: runtime-vol
+      mountPath: /var/run
+  volumes:
+   - name: cache-vol
+     emptyDir: {}
+   - name: runtime-vol
+     emptyDir: {}
+  ````
+  - Suppose we set the `previleged: true` in above. Lets try to write now.`kubectl exec -ti nginx -- apt update`. this will throw error as we have enabled the read only rootfilesystem.
+    But lets try with `kubectl exec -ti nginx -- bash -c "echo '75' > /proc/sys/vm/swappiness"`. This will update the value in container but also on host too. so this is dangerous.
+
+ In summary
+ 
+ - always use readonly root filesystem with volume mounts as empty dir to
+ - set previleged=false
+ - set runAsUser=0
+
+To ensure all of the aboev, use Pod security policy or PSA. In general stick to the POLP.
