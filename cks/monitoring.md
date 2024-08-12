@@ -12,7 +12,7 @@ space to analyze the bahaviour by applying falco rules using its policy engine.
 -  it can be installed as service unit or dameonset.
 
 ## detect threats
-`journalctl -uf falco`, check this log window to see the warning/alerts about user behaviour.
+`journalctl -u falco -f`, check this log window to see the warning/alerts about user behaviour.
 it has rules files. it will define the rule name, condition, output and priority of the rule.
 ````
 - rule: detect shell inside a container
