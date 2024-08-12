@@ -78,7 +78,7 @@ same scenario above but we upgrade by adding a new node of 1.19 version and then
  
  - always use readonly root filesystem with volume mounts as empty dir to
  - set previleged=false
- - set runAsUser=0
+ - dont set runAsUser=0
 
 To ensure all of the aboev, use Pod security policy or PSA. In general stick to the POLP.
 
