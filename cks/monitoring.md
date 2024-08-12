@@ -81,3 +81,36 @@ same scenario above but we upgrade by adding a new node of 1.19 version and then
  - set runAsUser=0
 
 To ensure all of the aboev, use Pod security policy or PSA. In general stick to the POLP.
+
+
+# Auditing
+To log the events generated in k8s is called auditing. events are like create pods, deleting pods, secrets etc etc.. everything in cluster.
+
+````
+apiVersion: audit.k8s.io/v1
+kind: Policy
+rules:
+- level: Metadata
+````
+
+above is logging all the events at metadata level. to make it more specific like only deleting pods in specific namespace
+````
+apiVersion: audit.k8s.io/v1
+kind: Policy
+omitStages: ["RequestRecieved"]
+rules:
+- level: RequestResponse
+  namespaces: ["prod-ns"]
+  verbs: ["delete"]
+  resources:
+    - group: " "
+      resources: ["Pods"]
+      resourceNames: ["pod-webapp"]
+- level: Metadata
+  resources:
+    - group: " "
+      resources: ["Secrets"]
+````
+above will write everything for pod deletion with name pod-webapp and metdadat for all secrets.
+
+To enable auditing, Update the kubeapiserver with `--audit-log-path` and `--audit-policy-file`
