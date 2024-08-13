@@ -158,4 +158,5 @@ With insecure docker, someone can
 - gain access to host
 - run container for bit coin mining etc.
 
-
+# Network Policy
+To test connectivity `k run tmp --image=nginx:alpine --rm -i --restart=Never -- nc -v 1.1.1.1 53` 
