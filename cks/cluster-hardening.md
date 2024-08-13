@@ -46,6 +46,12 @@ Below are security primitives
 
 
 # TLS
+## Generate in single command
+I have seen this example in killerkode.
+````
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout cert.key -out cert.crt -subj "/CN=world.universe.mine/O=world.universe.mine"
+````
+
 ## CA
 Generate ca private key and then cert for ca 
 - generate private key `openssl genrsa -out ca.key 2048`
