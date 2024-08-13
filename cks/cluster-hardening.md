@@ -160,3 +160,4 @@ With insecure docker, someone can
 
 # Network Policy
 To test connectivity `k run tmp --image=nginx:alpine --rm -i --restart=Never -- nc -v 1.1.1.1 53` 
+ `nc -v host port` is better to test anv availabel easily
