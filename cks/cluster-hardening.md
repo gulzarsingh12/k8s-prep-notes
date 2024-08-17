@@ -101,9 +101,9 @@ There are 2 parts mainly to secure in kubelet.i.e. authentication and authorizat
 kubelet exposes 10250 and 10250 ports to access its api. 10250 is to provide api to access kubelet services but 10255 as a read only to access metrics of the pods and nodes etc. This is risky and should be disabled.
 
 ## auth
-Set `anonumous-auth=false`, this will ensure that only authenticated user can connect to kubelet. there are 2 auth modes tls and bearer token. we will use cert here to discuss
+Set `anonumous-auth=false`, this will ensure that only authenticated user can connect to kubelet. there are 2 auth modes tls cert(https) and bearer token. we will use cert here to discuss
   
-when client-ca-file and cert and key are set for kubelet, it will enable the auth with cert. from client also, set the tls cert, key to authenticate. like by kubeaoi-server.
+when **client-ca-file** and cert and key are set for kubelet, it will enable the auth with cert. from client also, set the tls cert, key to authenticate. like by kubeapi-server.
 
 ## authorization
 set `authorization-mod=Webhook`. valid values are **AlwaysAllow** and **Webhook**. when set always allow is risky. set to webhook, then it will send it to apiserver to authorize it.
@@ -112,6 +112,9 @@ set `authorization-mod=Webhook`. valid values are **AlwaysAllow** and **Webhook*
 set `read-only-port=0` this will disable the 10255 port ofr read only access. if value is set 0, it means disabled
 
 So in summary we can do authenticate, authorize and diable read port to secure kubelet. Set all the above as discuss in service or kubeletconfiguration removing - (dash) with caps.
+
+## NodeRestriction
+This is enabled in most of the kube adm deployment but its not by default hence need to do at `--enable-admission-plugins` in **apiserver**. This will restrict the access of a kubelet to only create labels etc on the node and pods created locally. Also it doesn't allow it to create labels with `node-restriction.kubernetes.io` on locally and any label on other nodes.
 
 # Port Forward
 - To access kube api server `kubectl proxy` will start on localhost using port 8001. this way it will not need to pass tls cert,key,ca with every request to api server.
@@ -161,3 +164,9 @@ With insecure docker, someone can
 # Network Policy
 To test connectivity `k run tmp --image=nginx:alpine --rm -i --restart=Never -- nc -v 1.1.1.1 53` 
  `nc -v host port` is better to test anv availabel easily
+
+# RBAC
+- Ensure api server is set to use RBAC `--authorization-mode=Node,RBAC`
+- ensure `--insecure-port` is set to 0.
+- ensure `--insecure-bind-address` **is not set**. In case its required, it could be set to localhost. it shouldn't be to any network reachable ip address.
+- `--anonymous-auth` to false
