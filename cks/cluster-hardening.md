@@ -165,6 +165,16 @@ With insecure docker, someone can
   
 https://sysdig.com/blog/7-docker-security-vulnerabilities/ 
 
+## PID namespace
+`docker run --name app1 -d --pid=private nginx:alpine sleep 1d`
+- `--pid=private` start docker container in its own pid namespace.this is default also. other modes are
+  - `--pid=host` will share the pid namespace of host and will have access to host
+  - `--pid=container:<containerId>` will share the pid namespace of other container. like `--pid=container:app1` will show the processes running in container app2 in app1 and vice versa.
+-  `-d` run in detached mode
+-  `sleep 1d` is the command pass to container to run
+
+`docker exec -it app1 /bin/sh` will attached to the bash terminal of running container.  
+
 # Network Policy
 To test connectivity `k run tmp --image=nginx:alpine --rm -i --restart=Never -- nc -v 1.1.1.1 53` 
  `nc -v host port` is better to test anv availabel easily
