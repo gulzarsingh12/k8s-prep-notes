@@ -160,6 +160,8 @@ With insecure docker, someone can
 - delete containers
 - gain access to host
 - run container for bit coin mining etc.
+  
+https://sysdig.com/blog/7-docker-security-vulnerabilities/ 
 
 # Network Policy
 To test connectivity `k run tmp --image=nginx:alpine --rm -i --restart=Never -- nc -v 1.1.1.1 53` 
