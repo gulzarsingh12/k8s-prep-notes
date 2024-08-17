@@ -58,6 +58,9 @@ apt remove apache2
 ### identify
 - check port description under  `/etc/services`
 - or check port listening on `netstat -an | grep -W LISTEN`
+- or check with `lsof -i :8888` to check process running on port.
+- to get the pid of process use `pidof apache2` or `ps -ef | grep apache2`
+- to find the path of execution
 - for k8s, check documentation to see which port should be open.
 
 In lab, i see they disable/stop the service to remove the port from listening.
