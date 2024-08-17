@@ -22,7 +22,7 @@
 - disbale root acess
 - disbale password based auth
 
-update `/etc/ssh/sshd_config` with `PermitRootLogin no' and `PasswordAuthentication no`
+update `/etc/ssh/sshd_config` with `PermitRootLogin no` and `PasswordAuthentication no`
 
 to first login with certificate use `ssh-keygen -t rsa` to generate key and then `ssh-copy-id john@node01` to copy the ssh public key to server.
 
