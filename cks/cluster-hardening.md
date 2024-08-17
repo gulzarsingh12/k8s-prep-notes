@@ -26,6 +26,8 @@ Follow the instructions for download and run.. like below to pass config file.
 ````
 ./kube-bench --config-dir `pwd`/cfg --config `pwd`/cfg/config.yaml
 ````
+### flags
+`kube-bench run --targets=master,node,etcd,policies --check="1.1.1,1.2.1" --skip="1.3.1,1.4.4"`
 
 # Security Primitives
 Below are security primitives
