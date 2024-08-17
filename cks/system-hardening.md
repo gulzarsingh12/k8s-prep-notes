@@ -60,7 +60,10 @@ apt remove apache2
 - or check port listening on `netstat -an | grep -W LISTEN`
 - or check with `lsof -i :8888` to check process running on port.
 - to get the pid of process use `pidof apache2` or `ps -ef | grep apache2`
-- to find the path of execution
+- to find the path of execution `ls -lrt /proc/<pid>/exe`. this could be a single executable or service or installed package. to find out.
+  - try to find if service using systemctl list-units --type=service | grep <process name>`
+  - try to find it installed package via apt. `apt list | grep <process name>` or `apt search` or `ap show`
+  - if not find anything from above as service or package then delete executable. 
 - for k8s, check documentation to see which port should be open.
 
 In lab, i see they disable/stop the service to remove the port from listening.
